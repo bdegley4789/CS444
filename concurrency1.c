@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "mt19937ar.c"
+#include <assert.h>
 #define maxSize 32 //Buffer can hold 32 items
 
 //For building structs information used from https://stackoverflow.com/questions/32698293/assign-values-to-structure-variables
@@ -25,12 +26,12 @@ void* consumer(void *ptr) {
     unsigned int timeWait = 0;
     while(1) {
         if (count <= 0) {
-            printf("Buffer Empty: Waiting on producer...");
+            printf("Buffer Empty: Waiting on producer...\n");
             count = 0;
             wait = 1;
         }
         //Consume data from array data structure
-        printf("Item Value: %d",arrBuffer[count].number);
+        printf("Item Value: %d\n",arrBuffer[count].number);
         timeWait = arrBuffer[count].time;
         //Wait for specific amount of time
         unsigned int time_to_sleep = timeWait;
@@ -45,7 +46,7 @@ void* producer(void *ptr) {
     while(1) {
         //If count is higher than Max size then wait for consumer to remove data
         if (count >= maxSize) {
-            printf("Buffer Full: Waiting on consumer...");
+            printf("Buffer Full: Waiting on consumer...\n");
             count = 32;
             wait = 1;
         }
@@ -57,10 +58,26 @@ void* producer(void *ptr) {
         count++;
     }
 }
+
 int main(int argc, char **argv)
 {
-    
-    return(0);
+	// Thread ID.
+	pthread_t tidConsumer;    
+	pthread_t tidProducer;    
+	int result_code;
+	
+	// Create consumer and producer thread.
+	result_code = pthread_create(&tidConsumer, NULL, consumer, NULL);
+	printf("Consumer thread created.\n");
+	result_code = pthread_create(&tidProducer, NULL, producer, NULL);
+	printf("Producer thread created.\n");
+
+	// When done.
+	result_code = pthread_join(tidProducer, NULL);
+	//assert(0 == result_code);
+	result_code = pthread_join(tidConsumer, NULL);
+	//assert(0 == result_code);
+	printf("Threads are completed.\n");
+
+	exit(0);
 }
-
-
