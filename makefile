@@ -1,7 +1,6 @@
-all: concurrency1 mt19937ar
+all: run 
 
-concurrency1: concurrency1.c
-	gcc -o concurrency1 concurrency1.c
+run: concurrency1.c
+	gcc -pthread concurrency1.c -o run 
 
-mt19937: mt19937ar.c
-	gcc -o mt19937 mt19937ar.c
+
