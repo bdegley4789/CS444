@@ -22,7 +22,9 @@ typedef struct data {
 pthread_cond_t thread_consumer, thread_producer;
 pthread_mutex_t thread_mutex;
 
+//Array data structure of 32 size
 Data arrBuffer[maxSize];
+//Count to keep track of size
 int count = 0;
 
 //Consumer thread
@@ -67,14 +69,14 @@ void* producer(void *ptr) {
         p1 = (Data){.number = (genrand_int32() % 99) + 1, .time = (genrand_int32() % 6) + 3};
         //Producer wait 3-7 seconds
         unsigned int producer_sleep = (genrand_int32() % 5) + 3;
-        //To use shared resource
+        //To use shared resource(count and arrBuffer) put mutex lock on
         pthread_mutex_lock(&thread_mutex);
         printf("ITEM PRODUCED Value: %d Time: %d Wait: %d Count: %d\n",p1.number,p1.time,producer_sleep,count);
         arrBuffer[count] = p1;
         count++;
         pthread_cond_signal(&thread_consumer);
         pthread_mutex_unlock(&thread_mutex);
-        //Call sleep after mutex is unlock so consumer thread can run
+        //Call sleep after mutex is unlock so consumer thread can run during this time
         while(producer_sleep)
             producer_sleep = sleep(producer_sleep);
     }
@@ -84,6 +86,7 @@ void* producer(void *ptr) {
 //http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html
 //Information on mutex lock threads used and modified from the following
 //https://stackoverflow.com/questions/14888027/mutex-lock-threads
+//http://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread_cond_init.html
 int main()
 {
     init_genrand(time(NULL));
@@ -92,24 +95,43 @@ int main()
 	pthread_t tidProducer;
 	int result_code;
     
-    pthread_mutex_init(&thread_mutex, NULL);
-    pthread_cond_init(&thread_consumer, NULL);
-    pthread_cond_init(&thread_producer, NULL);
-	
+    //Create mutex so threads can both use shared resource
+    if(pthread_mutex_init(&thread_mutex, NULL)) {
+        fprintf(stderr, "Error creating mutex");
+        return 1;
+    }
+    if(pthread_cond_init(&thread_producer, NULL)) {
+        fprintf(stderr, "Error creating producer");
+        return 1;
+    }
+    if(pthread_cond_init(&thread_consumer, NULL)) {
+        fprintf(stderr, "Error creating consumer");
+        return 1;
+    }
 	// Create consumer and producer thread.
-	pthread_create(&tidConsumer, NULL, consumer, NULL);
+    if(pthread_create(&tidProducer, NULL, producer, NULL)) {
+        fprintf(stderr, "Error creating producer thread\n");
+        return 1;
+    }
+    printf("Producer thread created.\n");
+    if(pthread_create(&tidConsumer, NULL, consumer, NULL)) {
+        fprintf(stderr, "Error creating consumer thread\n");
+        return 1;
+    }
 	printf("Consumer thread created.\n");
-	pthread_create(&tidProducer, NULL, producer, NULL);
-	printf("Producer thread created.\n");
-
-	// When done.
-    pthread_join(tidConsumer, NULL);
-	//assert(0 == result_code);
-	pthread_join(tidProducer, NULL);
-	//assert(0 == result_code);
+	// When done join threads.
+    if(pthread_join(tidProducer, NULL)) {
+        fprintf(stderr, "Error joining producer thread\n");
+        return 2;
+    }
+    if(pthread_join(tidConsumer, NULL)) {
+        fprintf(stderr, "Error joining consumer thread\n");
+        return 2;
+    }
+    //Destroy pthreads so they don't continue after ctrl c
     pthread_mutex_destroy(&thread_mutex);
-    pthread_cond_destroy(&thread_consumer);
     pthread_cond_destroy(&thread_producer);
+    pthread_cond_destroy(&thread_consumer);
 	printf("Threads are completed.\n");
 
 	exit(0);
