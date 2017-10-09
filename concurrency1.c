@@ -38,7 +38,7 @@ void* consumer(void *ptr) {
         }
         pthread_mutex_unlock(&thread_mutex);
         //Consume data from array data structure
-        //printf("Item Value: %d\n",arrBuffer[count].number);
+        //printf("Item Value: %d\n",arrBuffer[count-1].number);
         printf("ITEM CONSUMED Value: %d Time: %d Count %d\n",arrBuffer[count-1].number,arrBuffer[count-1].time,count);
         unsigned int timeWait = arrBuffer[count-1].time;
         //Wait for specific amount of time
