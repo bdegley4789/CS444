@@ -89,6 +89,7 @@ void* producer(void *ptr) {
 //http://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread_cond_init.html
 int main()
 {
+    //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
 	// Thread ID.
 	pthread_t tidConsumer;    
@@ -100,6 +101,7 @@ int main()
         fprintf(stderr, "Error creating mutex");
         return 1;
     }
+    //Initialize conditional variables so thread can wait until condition occurs
     if(pthread_cond_init(&thread_producer, NULL)) {
         fprintf(stderr, "Error creating producer");
         return 1;
