@@ -11,5 +11,4 @@ all:
 	rm hw1_write_up.aux
 	rm hw1_write_up.dvi
 	rm hw1_write_up.log
-	rm hw1_write_up.out
 	rm hw1_write_up.ps
