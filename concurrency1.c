@@ -13,7 +13,7 @@
 #define maxSize 32 //Buffer can hold 32 items
 
 //Information on building structs used and modified from the following
-//https://stackoverflow.com/questions/32698293/assign-values-to-structure-variables
+//https://stackoverflow.com/questions/32698293
 typedef struct data {
     int number;
     int time;
@@ -39,7 +39,8 @@ void* consumer(void *ptr) {
         pthread_mutex_unlock(&thread_mutex);
         //Consume data from array data structure
         //printf("Item Value: %d\n",arrBuffer[count-1].number);
-        printf("ITEM CONSUMED Value: %d Time: %d Count %d\n",arrBuffer[count-1].number,arrBuffer[count-1].time,count);
+        printf("ITEM CONSUMED Value: %d Time: %d Count %d\n",
+               arrBuffer[count-1].number,arrBuffer[count-1].time,count);
         unsigned int timeWait = arrBuffer[count-1].time;
         //Wait for specific amount of time
         unsigned int time_to_sleep = timeWait;
@@ -57,7 +58,7 @@ void* consumer(void *ptr) {
 void* producer(void *ptr) {
     while(1) {
         pthread_mutex_lock(&thread_mutex);
-        //If count is higher than Max size then wait for consumer to remove data
+        //If count is higher than max then wait for consumer to remove data
         while (count >= maxSize) {
             printf("Buffer Full: Waiting on consumer...\n");
             pthread_cond_wait(&thread_producer, &thread_mutex);
@@ -66,17 +67,19 @@ void* producer(void *ptr) {
         //Build new data
         Data p1;
         //Number 1-100, Time between 2 and 9. 3,4,5,6,7,8
-        p1 = (Data){.number = (genrand_int32() % 99) + 1, .time = (genrand_int32() % 6) + 3};
+        p1 = (Data){.number = (genrand_int32() % 99) + 1,
+            .time = (genrand_int32() % 6) + 3};
         //Producer wait 3-7 seconds
         unsigned int producer_sleep = (genrand_int32() % 5) + 3;
         //To use shared resource(count and arrBuffer) put mutex lock on
         pthread_mutex_lock(&thread_mutex);
-        printf("ITEM PRODUCED Value: %d Time: %d Wait: %d Count: %d\n",p1.number,p1.time,producer_sleep,count);
+        printf("ITEM PRODUCED Value: %d Time: %d Wait: %d Count: %d\n",
+               p1.number,p1.time,producer_sleep,count);
         arrBuffer[count] = p1;
         count++;
         pthread_cond_signal(&thread_consumer);
         pthread_mutex_unlock(&thread_mutex);
-        //Call sleep after mutex is unlock so consumer thread can run during this time
+        //Call sleep after mutex is unlock so consumer thread can run
         while(producer_sleep)
             producer_sleep = sleep(producer_sleep);
     }
@@ -101,7 +104,7 @@ int main()
         fprintf(stderr, "Error creating mutex");
         return 1;
     }
-    //Initialize conditional variables so thread can wait until condition occurs
+    //Initialize conditional vars so thread can wait until condition occurs
     if(pthread_cond_init(&thread_producer, NULL)) {
         fprintf(stderr, "Error creating producer");
         return 1;
