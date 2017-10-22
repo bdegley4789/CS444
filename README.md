@@ -1,1 +1,1 @@
-# CS444-HW1
+# CS444 Homework assignments
