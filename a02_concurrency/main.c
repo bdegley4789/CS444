@@ -1,6 +1,7 @@
 //Bryce Egley and Bruce Garcia
 //CS 444
 //Concurrency exercise 2: The Dining Philosophers Problem
+//We re-used some of the code from concurrency exercise #1
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
@@ -19,70 +20,85 @@ typedef struct data {
     int time;
 } Data;
 
-pthread_cond_t thread_consumer, thread_producer;
+pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
 
 //Array data structure of 32 size
-Data arrBuffer[maxSize];
-//Count to keep track of size
-int count = 0;
+Data forks[maxSize];
+Data plates[maxSize];
+
+void think() {
+    //Think for 1-20 seconds
+    unsigned int think_sleep = (genrand_int32() % 20) + 1;
+    while(think_sleep)
+        think_sleep = sleep(think_sleep);
+}
+void eat() {
+    //Eat for 2-9 seconds
+    unsigned int eat_sleep = (genrand_int32() % 8) + 2;
+    while(eat_sleep)
+        eat_sleep = sleep(eat_sleep);
+}
+void get_forks() {
+    
+    //TODO
+    
+    
+}
+void put_forks() {
+    
+    //TODO
+    
+}
 
 void *plato(void* ptr)
 {
-	// Think
-
-	// get_fork
-
-	// eat
-
-	// put_fork
+    while(1) {
+        think();
+        get_forks();
+        eat();
+        put_forks();
+    }
 }
 
 void *aristotle(void* ptr)
 {
-	// Think
-
-	// get_fork
-
-	// eat
-
-	// put_fork
-
+    while(1) {
+        think();
+        get_forks();
+        eat();
+        put_forks();
+    }
 }
 
 void *socrates(void* ptr)
 {
-	// Think
-
-	// get_fork
-
-	// eat
-
-	// put_fork
-
+    while(1) {
+        think();
+        get_forks();
+        eat();
+        put_forks();
+    }
 }
 
 void *confucius(void* ptr)
 {
-	// Think
-
-	// get_fork
-
-	// eat
-
-	// put_fork
-
+    while(1) {
+        think();
+        get_forks();
+        eat();
+        put_forks();
+    }
 }
 
 void *epicurus(void* ptr)
 {
-	// Think
-
-	// get_fork
-
-	// eat
-
-	// put_fork
+    while(1) {
+        think();
+        get_forks();
+        eat();
+        put_forks();
+    }
 }
 
 int main() {
