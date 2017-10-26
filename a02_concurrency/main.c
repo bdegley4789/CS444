@@ -41,13 +41,19 @@ void eat() {
 }
 void get_forks() {
     
-    //TODO
+    //Getting fork takes between 1-3 seconds
+	unsigned int getting_fork = (genrand_int32() % 3) + 1;	
+
+	// Check to see if there are any forks available
     
     
 }
 void put_forks() {
     
-    //TODO
+    //Putting fork takes between 1-3 seconds
+	unsigned int putting_fork = (genrand_int32() % 3) + 1;	
+    
+	//Return the fork
     
 }
 
