@@ -16,15 +16,25 @@
 //Information on building structs used and modified from the following
 //https://stackoverflow.com/questions/32698293
 typedef struct data {
-    int number;
-    int time;
+    char[9] name;
 } Data;
+
+//Array of forks on table
+Data arrTable[maxSize];
+
+//Array data structure of 32 size
+int count = 0;
+
+typedef struct status {
+    char[12] status;
+} Status;
+
+Status arrPhilosophers[maxSize];
+
+int phil_count = 0;
 
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
-
-//Array data structure of 32 size
-int fork_count = 0;
 
 void think() {
     //Think for 1-20 seconds
@@ -38,28 +48,76 @@ void eat() {
     while(eat_sleep)
         eat_sleep = sleep(eat_sleep);
 }
-void get_forks(char name[9]) {
+void get_forks(char philospher_name[9], pthread_cond_t phil) {
     
     //Getting fork takes between 1-3 seconds
 	unsigned int getting_fork = (genrand_int32() % 3) + 1;
+    //Change philospher status
+    Status p2;
+    p2 = (Status){.status = "Getting Fork"};
+    pthread_mutex_lock(&thread_mutex);
+    arrPhilosophers[phil_count] = p2;
+    phil_count++;
+    //Print new status
+    print_status();
+    pthread_mutex_unlock(&thread_mutex);
 	// Check to see if there are any forks available
     pthread_mutex_lock(&thread_mutex);
-    while(fork_count <= 0) {
-        printf("ERROR: No Forks available");
+    while(count >= maxSize) {
+        printf("ERROR: No Forks available...\n");
         pthread_cond_wait(&thread_mutex);
     }
     pthread_mutex_unlock(&thread_mutex);
+    //Build new data
+    Data p1;
+    p1 = (Data){.name = philospher_name};
+    //Change Status
+    p2 = (Status){.status = "Eating"};
+    arrPhilosophers[phil_count] = p2;
+    phil_count--;
+    //Lock Mutex for thread use
     pthread_mutex_lock(&thread_mutex);
-    printf("Fork: %d picked up by %s",fork_count+1,name)
-    count--;
+    //Add new philospher name to forks
+    arrTable[count] = p1;
+    count++;
+    pthread_cond_signal(&phil);
+    ////Unlock mutex so other threads can use data structure
     pthread_mutex_unlock(&thread_mutex);
+    //Output new results
+    print_status();
 }
-void put_forks() {
+void put_forks(char philospher_name[9], pthread_cond_t phil) {
     
     //Putting fork takes between 1-3 seconds
 	unsigned int putting_fork = (genrand_int32() % 3) + 1;
 	//Return the fork
-    
+    pthread_mutex_lock(&thread_mutex);
+    while (count <= 0) {
+        printf("Error: No place to put fork down...\n");
+        pthread_cond_wait(&thread_mutex);
+    }
+    pthread_mutex_unlock(&thread_mutex);
+    pthread_mutex_lock(&thread_mutex);
+    //Need to check that specific thread is removed
+    count--;
+    pthread_cond_signal(&phil);
+    //Unlock mutex so other threads can use data structure
+    pthread_mutex_unlock(&thread_mutex);
+    //Output new results
+    print_status();
+}
+
+void print_results() {
+    printf("***************************************");
+    printf("Fork Status\n");
+    for (int i = 0; i < maxSize; i++) {
+        printf("Fork %d is currently held by %s\n",i+1,)
+    }
+    printf("Philosopher Status\n");
+    for (int j = 0; j < maxSize; j++) {
+        printf("%s is currently %s",);
+    }
+    printf("***************************************");
 }
 
 void *plato(void* ptr)
@@ -67,9 +125,9 @@ void *plato(void* ptr)
     char name[9] = "plato";
     while(1) {
         think();
-        get_forks(name);
+        get_forks(name,thread_plato);
         eat();
-        put_forks(name);
+        put_forks(name,thread_plato);
     }
 }
 
@@ -78,9 +136,9 @@ void *aristotle(void* ptr)
     char name[9] = "aristotle";
     while(1) {
         think();
-        get_forks(name);
+        get_forks(name,thread_aristotle);
         eat();
-        put_forks(name);
+        put_forks(name,thread_aristotle);
     }
 }
 
@@ -89,20 +147,20 @@ void *socrates(void* ptr)
     char name[9] = "socrates";
     while(1) {
         think();
-        get_forks(name);
+        get_forks(name,thread_socrates);
         eat();
-        put_forks(name);
+        put_forks(name,thread_socrates);
     }
 }
 
 void *confucius(void* ptr)
 {
-    char name[9] = "confucius"
+    char name[9] = "confucius";
     while(1) {
         think();
-        get_forks(name);
+        get_forks(name,thread_confucius);
         eat();
-        put_forks(name);
+        put_forks(name,thread_confucius);
     }
 }
 
@@ -111,9 +169,9 @@ void *epicurus(void* ptr)
     char name[9] = "epicurus";
     while(1) {
         think();
-        get_forks(name);
+        get_forks(name,thread_epicurus);
         eat();
-        put_forks(name);
+        put_forks(name,thread_epicurus);
     }
 }
 
