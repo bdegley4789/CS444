@@ -26,6 +26,7 @@ Data arrTable[maxSize];
 int count = 0;
 
 typedef struct status {
+    char name[9];
     char status[12];
 } Status;
 
@@ -51,9 +52,10 @@ void eat() {
 void get_forks(char philospher_name[9], pthread_cond_t phil) {
     
     //Getting fork takes between 1-3 seconds
-	unsigned int getting_fork = (genrand_int32() % 3) + 1;
+    unsigned int getting_fork = (genrand_int32() % 3) + 1;
     //Change philospher status
     Status p2;
+    p2 = (Status){.name = philospher_name};
     p2 = (Status){.status = "Getting Fork"};
     pthread_mutex_lock(&thread_mutex);
     arrPhilosophers[phil_count] = p2;
@@ -61,7 +63,7 @@ void get_forks(char philospher_name[9], pthread_cond_t phil) {
     //Print new status
     print_status();
     pthread_mutex_unlock(&thread_mutex);
-	// Check to see if there are any forks available
+    // Check to see if there are any forks available
     pthread_mutex_lock(&thread_mutex);
     while(count >= maxSize) {
         printf("ERROR: No Forks available...\n");
@@ -73,6 +75,7 @@ void get_forks(char philospher_name[9], pthread_cond_t phil) {
     p1 = (Data){.name = philospher_name};
     //Change Status
     p2 = (Status){.status = "Eating"};
+    p2 = (Status){.name = philospher_name};
     arrPhilosophers[phil_count] = p2;
     phil_count--;
     //Lock Mutex for thread use
@@ -89,8 +92,8 @@ void get_forks(char philospher_name[9], pthread_cond_t phil) {
 void put_forks(char philospher_name[9], pthread_cond_t phil) {
     
     //Putting fork takes between 1-3 seconds
-	unsigned int putting_fork = (genrand_int32() % 3) + 1;
-	//Return the fork
+    unsigned int putting_fork = (genrand_int32() % 3) + 1;
+    //Return the fork
     pthread_mutex_lock(&thread_mutex);
     while (count <= 0) {
         printf("Error: No place to put fork down...\n");
@@ -110,14 +113,14 @@ void put_forks(char philospher_name[9], pthread_cond_t phil) {
 void print_results() {
     printf("***************************************");
     printf("Fork Status\n");
-	int i;
+    int i;
     for (i = 0; i < maxSize; i++) {
-        printf("Fork %d is currently held by %s\n",i+1,)
+        printf("Fork %d is currently held by %s\n",i+1,arrTable[i].name);
     }
     printf("Philosopher Status\n");
-	int j;
+    int j;
     for (j = 0; j < maxSize; j++) {
-        printf("%s is currently %s",);
+        printf("%s is currently %s",arrPhilosophers[j].name,arrPhilosophers[j].status);
     }
     printf("***************************************");
 }
