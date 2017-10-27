@@ -65,7 +65,7 @@ void get_forks(char philospher_name[9], pthread_cond_t phil) {
     pthread_mutex_lock(&thread_mutex);
     while(count >= maxSize) {
         printf("ERROR: No Forks available...\n");
-        pthread_cond_wait(&thread_mutex);
+        pthread_cond_wait(&phil,&thread_mutex);
     }
     pthread_mutex_unlock(&thread_mutex);
     //Build new data
@@ -94,7 +94,7 @@ void put_forks(char philospher_name[9], pthread_cond_t phil) {
     pthread_mutex_lock(&thread_mutex);
     while (count <= 0) {
         printf("Error: No place to put fork down...\n");
-        pthread_cond_wait(&thread_mutex);
+        pthread_cond_wait(&phil,&thread_mutex);
     }
     pthread_mutex_unlock(&thread_mutex);
     pthread_mutex_lock(&thread_mutex);
