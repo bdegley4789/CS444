@@ -24,8 +24,7 @@ pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius
 pthread_mutex_t thread_mutex;
 
 //Array data structure of 32 size
-Data forks[maxSize];
-Data plates[maxSize];
+int fork_count = 0;
 
 void think() {
     //Think for 1-20 seconds
@@ -39,14 +38,21 @@ void eat() {
     while(eat_sleep)
         eat_sleep = sleep(eat_sleep);
 }
-void get_forks() {
+void get_forks(char name[9]) {
     
     //Getting fork takes between 1-3 seconds
 	unsigned int getting_fork = (genrand_int32() % 3) + 1;
 	// Check to see if there are any forks available
-    
-    
-    
+    pthread_mutex_lock(&thread_mutex);
+    while(fork_count <= 0) {
+        printf("ERROR: No Forks available");
+        pthread_cond_wait(&thread_mutex);
+    }
+    pthread_mutex_unlock(&thread_mutex);
+    pthread_mutex_lock(&thread_mutex);
+    printf("Fork: %d picked up by %s",fork_count+1,name)
+    count--;
+    pthread_mutex_unlock(&thread_mutex);
 }
 void put_forks() {
     
@@ -58,51 +64,56 @@ void put_forks() {
 
 void *plato(void* ptr)
 {
+    char name[9] = "plato";
     while(1) {
         think();
-        get_forks();
+        get_forks(name);
         eat();
-        put_forks();
+        put_forks(name);
     }
 }
 
 void *aristotle(void* ptr)
 {
+    char name[9] = "aristotle";
     while(1) {
         think();
-        get_forks();
+        get_forks(name);
         eat();
-        put_forks();
+        put_forks(name);
     }
 }
 
 void *socrates(void* ptr)
 {
+    char name[9] = "socrates";
     while(1) {
         think();
-        get_forks();
+        get_forks(name);
         eat();
-        put_forks();
+        put_forks(name);
     }
 }
 
 void *confucius(void* ptr)
 {
+    char name[9] = "confucius"
     while(1) {
         think();
-        get_forks();
+        get_forks(name);
         eat();
-        put_forks();
+        put_forks(name);
     }
 }
 
 void *epicurus(void* ptr)
 {
+    char name[9] = "epicurus";
     while(1) {
         think();
-        get_forks();
+        get_forks(name);
         eat();
-        put_forks();
+        put_forks(name);
     }
 }
 
