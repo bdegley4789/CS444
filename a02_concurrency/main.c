@@ -110,11 +110,13 @@ void put_forks(char philospher_name[9], pthread_cond_t phil) {
 void print_results() {
     printf("***************************************");
     printf("Fork Status\n");
-    for (int i = 0; i < maxSize; i++) {
+	int i;
+    for (i = 0; i < maxSize; i++) {
         printf("Fork %d is currently held by %s\n",i+1,)
     }
     printf("Philosopher Status\n");
-    for (int j = 0; j < maxSize; j++) {
+	int j;
+    for (j = 0; j < maxSize; j++) {
         printf("%s is currently %s",);
     }
     printf("***************************************");
