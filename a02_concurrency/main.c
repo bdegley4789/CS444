@@ -16,7 +16,7 @@
 //Information on building structs used and modified from the following
 //https://stackoverflow.com/questions/32698293
 typedef struct data {
-    char[9] name;
+    char name[9];
 } Data;
 
 //Array of forks on table
@@ -26,7 +26,7 @@ Data arrTable[maxSize];
 int count = 0;
 
 typedef struct status {
-    char[12] status;
+    char status[12];
 } Status;
 
 Status arrPhilosophers[maxSize];
