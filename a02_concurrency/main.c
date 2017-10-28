@@ -39,7 +39,6 @@ void eat() {
 }
 //Print current results
 void print_results() {
-    printf("***************************************\n");
     printf("Fork Status\n");
     int i;
     for (i = 0; i < maxSize; i++) {
@@ -185,6 +184,7 @@ int main() {
     printf("Confucius thread created.\n");
     pthread_create(&tidEpicurus, NULL, epicurus, NULL);
     printf("Epicurus thread created.\n");
+    printf("***************************************\n");
     
     // When done join threads.
     pthread_join(tidPlato, NULL);
