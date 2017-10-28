@@ -13,26 +13,13 @@
 #include <assert.h>
 #define maxSize 5 //Table will hold 5 plates and forks
 
-//Information on building structs used and modified from the following
-//https://stackoverflow.com/questions/32698293
-typedef struct data {
-    char name[9];
-} Data;
-
-//Array of forks on table
-Data arrTable[maxSize];
-
-//Array data structure of 32 size
-int count = 0;
-
 typedef struct status {
     char name[9];
+    int fork;
     char status[12];
 } Status;
 
 Status arrPhilosophers[maxSize];
-
-int phil_count = 0;
 
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
@@ -49,142 +36,126 @@ void eat() {
     while(eat_sleep)
         eat_sleep = sleep(eat_sleep);
 }
-void get_forks(char philospher_name[9], pthread_cond_t phil) {
-    
+void get_forks(int n, pthread_cond_t phil) {
     //Getting fork takes between 1-3 seconds
     unsigned int getting_fork = (genrand_int32() % 3) + 1;
     //Change philospher status
-    Status p2;
-    p2 = (Status){.name = philospher_name};
-    p2 = (Status){.status = "Getting Fork"};
+    Status getFork;
+    getFork = (Status){.status = "Getting Fork",.fork = 1};
     pthread_mutex_lock(&thread_mutex);
-    arrPhilosophers[phil_count] = p2;
-    phil_count++;
+    arrPhilosophers[n] = getFork;
     //Print new status
     print_status();
     pthread_mutex_unlock(&thread_mutex);
-    // Check to see if there are any forks available
-    pthread_mutex_lock(&thread_mutex);
-    while(count >= maxSize) {
-        printf("ERROR: No Forks available...\n");
-        pthread_cond_wait(&phil,&thread_mutex);
-    }
-    pthread_mutex_unlock(&thread_mutex);
-    //Build new data
-    Data p1;
-    p1 = (Data){.name = philospher_name};
     //Change Status
-    p2 = (Status){.status = "Eating"};
-    p2 = (Status){.name = philospher_name};
-    arrPhilosophers[phil_count] = p2;
-    phil_count--;
+    getFork = (Status){.status = "Eating"};
+    arrPhilosophers[n] = getFork;
     //Lock Mutex for thread use
     pthread_mutex_lock(&thread_mutex);
-    //Add new philospher name to forks
-    arrTable[count] = p1;
-    count++;
     pthread_cond_signal(&phil);
     ////Unlock mutex so other threads can use data structure
     pthread_mutex_unlock(&thread_mutex);
     //Output new results
     print_status();
 }
-void put_forks(char philospher_name[9], int n, pthread_cond_t phil) {
-    
+void put_forks(int n, pthread_cond_t phil) {
     //Putting fork takes between 1-3 seconds
     unsigned int putting_fork = (genrand_int32() % 3) + 1;
-    //Return the fork
+    //Change philospher status
+    Status putFork;
+    putFork = (Status){.status = "Putting Fork",.fork = 0};
     pthread_mutex_lock(&thread_mutex);
-    while (count <= 0) {
-        printf("Error: No place to put fork down...\n");
-        pthread_cond_wait(&phil,&thread_mutex);
-    }
+    arrPhilosophers[n] = putFork;
+    //Print new status
+    print_status();
     pthread_mutex_unlock(&thread_mutex);
+    //Change Status
+    getFork = (Status){.status = "Thinking"};
+    arrPhilosophers[n] = getFork;
+    //Lock Mutex for thread use
     pthread_mutex_lock(&thread_mutex);
-	
-    // Delete philosopher name 
-    arrTable[n] = "";
-
-
-
     pthread_cond_signal(&phil);
-    //Unlock mutex so other threads can use data structure
+    ////Unlock mutex so other threads can use data structure
     pthread_mutex_unlock(&thread_mutex);
     //Output new results
     print_status();
 }
-
 void print_results() {
     printf("***************************************");
     printf("Fork Status\n");
     int i;
     for (i = 0; i < maxSize; i++) {
-        printf("Fork %d is currently held by %s\n",i+1,arrTable[i].name);
+        if (arrPhilosophers[i].fork == 1) {
+            printf("Fork %d is currently held by %s\n",i+1,arrPhilosophers[i+1].name);
+        } else {
+            printf("Fork %d is currently not being held\n",i+1);
+        }
     }
     printf("Philosopher Status\n");
     int j;
     for (j = 0; j < maxSize; j++) {
-        printf("%s is currently %s",arrPhilosophers[j].name,arrPhilosophers[j].status);
+        printf("%s is currently %s",arrPhilosophers[j+1].name,arrPhilosophers[j+1].status);
     }
     printf("***************************************");
 }
 
 void *plato(void* ptr)
 {
-    char name[9] = "plato";
     while(1) {
         think();
-        get_forks(name,thread_plato);
+        get_forks(1,thread_plato);
         eat();
-        put_forks(name,thread_plato);
+        put_forks(1,thread_plato);
     }
 }
 
 void *aristotle(void* ptr)
 {
-    char name[9] = "aristotle";
     while(1) {
         think();
-        get_forks(name,thread_aristotle);
+        get_forks(2,thread_aristotle);
         eat();
-        put_forks(name,thread_aristotle);
+        put_forks(2,thread_aristotle);
     }
 }
 
 void *socrates(void* ptr)
 {
-    char name[9] = "socrates";
     while(1) {
         think();
-        get_forks(name,thread_socrates);
+        get_forks(3,thread_socrates);
         eat();
-        put_forks(name,thread_socrates);
+        put_forks(3,thread_socrates);
     }
 }
 
 void *confucius(void* ptr)
 {
-    char name[9] = "confucius";
     while(1) {
         think();
-        get_forks(name,thread_confucius);
+        get_forks(4,thread_confucius);
         eat();
-        put_forks(name,thread_confucius);
+        put_forks(4,thread_confucius);
     }
 }
 
 void *epicurus(void* ptr)
 {
-    char name[9] = "epicurus";
     while(1) {
         think();
-        get_forks(name,thread_epicurus);
+        get_forks(5,thread_epicurus);
         eat();
-        put_forks(name,thread_epicurus);
+        put_forks(5,thread_epicurus);
     }
 }
 
 int main() {
+    Status p1,p2,p3,p4,p5;
+    p1 = (Status){.name = "plato",.fork = 0};
+    p2 = (Status){.name = "aristotle",.fork = 0};
+    p3 = (Status){.name = "socrates",.fork = 0};
+    p4 = (Status){.name = "confucius",.fork = 0};
+    p5 = (Status){.name = "epicurus",.fork = 0};
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
     // Thread ID.
