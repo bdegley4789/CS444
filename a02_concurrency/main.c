@@ -38,7 +38,7 @@ void eat() {
 }
 //Print current results
 void print_results() {
-    printf("***************************************");
+    printf("***************************************\n");
     printf("Fork Status\n");
     int i;
     for (i = 0; i < maxSize; i++) {
@@ -51,9 +51,9 @@ void print_results() {
     printf("Philosopher Status\n");
     int j;
     for (j = 0; j < maxSize; j++) {
-        printf("%s is currently %s",arrPhilosophers[j+1].name,arrPhilosophers[j+1].status);
+        printf("%s is currently %s\n",arrPhilosophers[j+1].name,arrPhilosophers[j+1].status);
     }
-    printf("***************************************");
+    printf("***************************************\n");
 }
 void get_forks(int n, pthread_cond_t phil) {
     //Getting fork takes between 1-3 seconds
