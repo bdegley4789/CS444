@@ -56,18 +56,17 @@ void print_results() {
     printf("***************************************\n");
 }
 void get_forks(int n, pthread_cond_t phil) {
-    //Getting fork takes between 1-3 seconds
-    unsigned int getting_fork = (genrand_int32() % 3) + 1;
     //Change philospher status
     Status getFork;
-    getFork = (Status){.status = "Getting Fork",.fork = 1};
+    //0 for false since you don't have the fork yet
+    getFork = (Status){.status = "Getting Fork",.fork = 0};
     pthread_mutex_lock(&thread_mutex);
     arrPhilosophers[n] = getFork;
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
     //Change Status
-    getFork = (Status){.status = "Eating"};
+    getFork = (Status){.status = "Eating",.fork = 1};
     arrPhilosophers[n] = getFork;
     //Lock Mutex for thread use
     pthread_mutex_lock(&thread_mutex);
@@ -78,18 +77,17 @@ void get_forks(int n, pthread_cond_t phil) {
     print_results();
 }
 void put_forks(int n, pthread_cond_t phil) {
-    //Putting fork takes between 1-3 seconds
-    unsigned int putting_fork = (genrand_int32() % 3) + 1;
     //Change philospher status
     Status putFork;
-    putFork = (Status){.status = "Putting Fork",.fork = 0};
+    //1 for true since you still have the fork
+    putFork = (Status){.status = "Putting Fork",.fork = 1};
     pthread_mutex_lock(&thread_mutex);
     arrPhilosophers[n] = putFork;
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
     //Change Status
-    putFork = (Status){.status = "Thinking"};
+    putFork = (Status){.status = "Thinking",.fork = 0};
     arrPhilosophers[n] = putFork;
     //Lock Mutex for thread use
     pthread_mutex_lock(&thread_mutex);
