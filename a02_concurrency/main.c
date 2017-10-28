@@ -51,7 +51,7 @@ void print_results() {
     printf("Philosopher Status\n");
     int j;
     for (j = 0; j < maxSize; j++) {
-        printf("%s is currently %s\n",names[j],arrPhilosophers[j+1].status);
+        printf("%s is currently %s\n",names[j],arrPhilosophers[j].status);
     }
     printf("***************************************\n");
 }
@@ -102,9 +102,9 @@ void *plato(void* ptr)
 {
     while(1) {
         think();
-        get_forks(1,thread_plato);
+        get_forks(0,thread_plato);
         eat();
-        put_forks(1,thread_plato);
+        put_forks(0,thread_plato);
     }
 }
 
@@ -112,9 +112,9 @@ void *aristotle(void* ptr)
 {
     while(1) {
         think();
-        get_forks(2,thread_aristotle);
+        get_forks(1,thread_aristotle);
         eat();
-        put_forks(2,thread_aristotle);
+        put_forks(1,thread_aristotle);
     }
 }
 
@@ -122,9 +122,9 @@ void *socrates(void* ptr)
 {
     while(1) {
         think();
-        get_forks(3,thread_socrates);
+        get_forks(2,thread_socrates);
         eat();
-        put_forks(3,thread_socrates);
+        put_forks(2,thread_socrates);
     }
 }
 
@@ -132,9 +132,9 @@ void *confucius(void* ptr)
 {
     while(1) {
         think();
-        get_forks(4,thread_confucius);
+        get_forks(3,thread_confucius);
         eat();
-        put_forks(4,thread_confucius);
+        put_forks(3,thread_confucius);
     }
 }
 
@@ -142,9 +142,9 @@ void *epicurus(void* ptr)
 {
     while(1) {
         think();
-        get_forks(5,thread_epicurus);
+        get_forks(4,thread_epicurus);
         eat();
-        put_forks(5,thread_epicurus);
+        put_forks(4,thread_epicurus);
     }
 }
 
