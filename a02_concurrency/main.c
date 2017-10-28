@@ -14,12 +14,13 @@
 #define maxSize 5 //Table will hold 5 plates and forks
 
 typedef struct status {
-    char name[15];
     int fork;
     char status[15];
 } Status;
 
 Status arrPhilosophers[maxSize];
+
+char names [maxSize][15] = {"plato", "aristotle","socrates","confucius","epicurus"};
 
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
@@ -43,7 +44,7 @@ void print_results() {
     int i;
     for (i = 0; i < maxSize; i++) {
         if (arrPhilosophers[i].fork == 1) {
-            printf("Fork %d is currently held by %s\n",i+1,arrPhilosophers[i+1].name);
+            printf("Fork %d is currently held by %s\n",i+1,names[i]);
         } else {
             printf("Fork %d is currently not being held\n",i+1);
         }
@@ -51,7 +52,7 @@ void print_results() {
     printf("Philosopher Status\n");
     int j;
     for (j = 0; j < maxSize; j++) {
-        printf("%s is currently %s\n",arrPhilosophers[j+1].name,arrPhilosophers[j+1].status);
+        printf("%s is currently %s\n",names[j],arrPhilosophers[j+1].status);
     }
     printf("***************************************\n");
 }
@@ -151,17 +152,6 @@ void *epicurus(void* ptr)
 }
 
 int main() {
-    Status p1,p2,p3,p4,p5;
-    p1 = (Status){.name = "plato",.fork = 0};
-    p2 = (Status){.name = "aristotle",.fork = 0};
-    p3 = (Status){.name = "socrates",.fork = 0};
-    p4 = (Status){.name = "confucius",.fork = 0};
-    p5 = (Status){.name = "epicurus",.fork = 0};
-    arrPhilosophers[0] = p1;
-    arrPhilosophers[1] = p2;
-    arrPhilosophers[2] = p3;
-    arrPhilosophers[3] = p4;
-    arrPhilosophers[4] = p5;
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
     // Thread ID.
