@@ -14,9 +14,9 @@
 #define maxSize 5 //Table will hold 5 plates and forks
 
 typedef struct status {
-    char name[9];
+    char name[15];
     int fork;
-    char status[12];
+    char status[15];
 } Status;
 
 Status arrPhilosophers[maxSize];
@@ -157,6 +157,11 @@ int main() {
     p3 = (Status){.name = "socrates",.fork = 0};
     p4 = (Status){.name = "confucius",.fork = 0};
     p5 = (Status){.name = "epicurus",.fork = 0};
+    arrPhilosophers[0] = p1;
+    arrPhilosophers[1] = p2;
+    arrPhilosophers[2] = p3;
+    arrPhilosophers[3] = p4;
+    arrPhilosophers[4] = p5;
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
     // Thread ID.
