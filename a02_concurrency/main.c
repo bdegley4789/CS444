@@ -89,7 +89,7 @@ void get_forks(char philospher_name[9], pthread_cond_t phil) {
     //Output new results
     print_status();
 }
-void put_forks(char philospher_name[9], pthread_cond_t phil) {
+void put_forks(char philospher_name[9], int n, pthread_cond_t phil) {
     
     //Putting fork takes between 1-3 seconds
     unsigned int putting_fork = (genrand_int32() % 3) + 1;
@@ -101,8 +101,12 @@ void put_forks(char philospher_name[9], pthread_cond_t phil) {
     }
     pthread_mutex_unlock(&thread_mutex);
     pthread_mutex_lock(&thread_mutex);
-    //Need to check that specific thread is removed
-    count--;
+	
+    // Delete philosopher name 
+    arrTable[n] = "";
+
+
+
     pthread_cond_signal(&phil);
     //Unlock mutex so other threads can use data structure
     pthread_mutex_unlock(&thread_mutex);
