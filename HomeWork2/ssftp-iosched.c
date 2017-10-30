@@ -67,7 +67,6 @@ sstf_latter_request(struct request_queue *q, struct request *rq)
 	return list_entry(rq->queuelist.next, struct request, queuelist);
 }
 
-// Change this method. 
 static int sstf_init_queue(struct request_queue *q, struct elevator_type *e)
 {
 	struct sstf_data *nd;
@@ -117,11 +116,6 @@ static struct elevator_type elevator_sstf = {
 	.elevator_name = "sstf",
 	.elevator_owner = THIS_MODULE,
 };
-//TODO
-static int sstf_init_queue(struct request_queue *q, struct elevator_type *e)
-{
-    
-}
 
 static int __init sstf_init(void)
 {
