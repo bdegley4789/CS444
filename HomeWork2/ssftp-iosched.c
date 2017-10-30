@@ -43,6 +43,19 @@ static void sstf_add_request(struct request_queue *q, struct request *rq)
 {
 	struct sstf_data *nd = q->elevator->elevator_data;
 
+	if(list_empty((&nd->queue)) {
+		list_add(&rq->queuelist, &nd->queue);
+		nd->enqueue = nd->queue.next;
+		nd->queue_count++;
+		return;
+	}
+
+	struct list_head* head;
+	list_for_each(head, &nd->queue) {
+
+	}
+	
+	// other
 	list_add_tail(&rq->queuelist, &nd->queue);
 }
 
