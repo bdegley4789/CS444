@@ -1,0 +1,162 @@
+
+% ===============================================
+% CS444: HW1 Getting started         Fall 2017
+% hw_revised.tex
+% Template for revised homework submission
+% ===============================================
+%         READ THE FOLLOWING CAREFULLY!!!
+% ===============================================
+% When you produce a PDF version of this document
+% to turn in, change the filename to hwX-name.pdf
+% replacing X with the homework assignment number
+% and name with your last name.
+% ===============================================
+
+
+% -----------------------------------------------
+% The preamble that follows can be ignored. Go on
+% down to the section that says "START HERE"
+% -----------------------------------------------
+
+\documentclass{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+
+% ------------------------------------------ %
+%                 START HERE                 %
+% ------------------------------------------ %
+
+\title{HW2 Report} % Replace X with the appropriate number
+\author{Bryce Egley, Bruce Garcia\\CS 444} % Replace "Author's Name" with your name
+
+\maketitle
+\hrule
+
+
+% -----------------------------------------------------
+% The following two environments (theorem, proof) are
+% where you will enter the statement and proof of your
+% first problem for this assignment.
+%
+% In the theorem environment, you can replace the word
+% "theorem" in the \begin and \end commands with
+% "exercise", "problem", "lemma", etc., depending on
+% what you are submitting. Replace the "x.yz" with the
+% appropriate number for your problem.
+%
+% If your problem does not involve a formal proof, you
+% can change the word "proof" in the \begin and \end
+% commands with "solution".
+% -----------------------------------------------------
+
+\section*{Questions}
+
+\begin{question}{1}
+What do you think the main point of this assignment is?
+\end{question}
+The main point of this assignment was to continuing to practice our skills and thinking in concurrency exercises
+
+% -----------------------------------------------------
+% Second problem
+% -----------------------------------------------------
+
+\vspace{0.25in} % This just adds some space between problems 1 and 2.
+
+\begin{question}{2}
+How did you personally approach the problem? Design decisions, algorithm, etc.\end{question}
+How I approached the problem was by identifying the problem. Next, I listed the objectives in chronological order. We then wrote a plan on how the data structures would work. We then executed this plan and fixed errors along the way.
+
+
+% -----------------------------------------------------
+% Third problem
+% -----------------------------------------------------
+
+\vspace{0.25in} % This adds some space between problems 2 and 3.
+
+\begin{question}{3}
+How did you ensure your solution was correct? Testing details, for instance.
+\end{question}
+The way we ensured that the solution was correct was by reading the instructions carefully. We did our best to try to understand what was being ask. We also tested the concurrency program by running program and checking that the eating, thinking, putting and getting forks was working correctly.
+
+
+% ---------------------------------------------------------
+% Fourth problem
+%----------------------------------------------------------
+
+\vspace{0.25in}
+\begin{question}{4}
+What did you learn?
+\end{question}
+We learned that when problems do not seem clear, one should come back later and reread the instructions again. This technique allowed me to come back to the problem with prior experience of unfamiliar technical words.
+
+% ---------------------------------------------------------
+% Version Control Log
+%----------------------------------------------------------
+\section*{Version Control Log}
+\textit{Table of Version Control Log} Ran command 'git log --graph --oneline'
+\newline
+\begin{center}
+\begin{tabular}{ c c }
+* 8932df9 (HEAD -> master, origin/master, origin/HEAD) Decrement numbers on phil \\
+* 06f2a68 Fixed print \\
+* 0b62556 Fixed lines print \\
+* e7d70f5 Fixed display names \\
+* dbfbc85 Fixed print names \\
+* fb9697f Fixed print \\
+* 972647d Fixed compile errors \\
+* 90c8bd4 Removed fork structure \\
+* 5efda41 delete philosopher name \\
+* fca30a7 Fixed print \\
+* 7eb6578 fixed comp errors \\
+* af6c168 Fixed wait error \\
+* 751afa1 fixed compling errors \\
+* c659d3f created Makefile \\
+* 60aa548 Add philospher data structure \\
+* 81788e6 getForks now has mutex \\
+* da67128 Added mt19937ar \\
+* e4973b1 worked on getting and putting fork down function \\
+*   5c2f5af MergingMerge branch 'master' of https://github.com/bdegley4789/CS444 \\
+* 363962b Create README.md \\
+* c298863 Create wait time for eat and think \\
+\end{tabular}
+\end{center}
+
+% ---------------------------------------------------------
+% Work Log
+%----------------------------------------------------------
+\section*{Work Log}
+October 24, 2017: We created methods for the philosophers and brainstormed how to solve the problem.
+\newline
+October 25, 2017: We reviewed the basics of threading. Next, we integrated it with different philosophers and functions.
+\newline
+October 27, 2017: We fixed all the bugs in our code and got the solution to work.
+
+% -----------------------------------------------
+% Ignore everything that appears below this.
+% -----------------------------------------------
+
+\end{document}
