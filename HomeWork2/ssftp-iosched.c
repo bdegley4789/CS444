@@ -16,9 +16,10 @@ static void sstf_merged_requests(struct request_queue *q, struct request *rq,
 				 struct request *next)
 {
 	list_del_init(&next->queuelist);
+    //Print Kernel
+    printk(KERN_INFO "Merged\n");
 }
 
-// Change this method. 
 static int sstf_dispatch(struct request_queue *q, int force)
 {
 	struct sstf_data *nd = q->elevator->elevator_data;
@@ -28,11 +29,16 @@ static int sstf_dispatch(struct request_queue *q, int force)
 		rq = list_entry(nd->queue.next, struct request, queuelist);
 		list_del_init(&rq->queuelist);
 		elv_dispatch_sort(q, rq);
+        //Set for use
+        temp = blk_rq_pos(rq);
 		return 1;
 	}
+    //Changed
+    printk(KERN_INFO "Dispatched\n");
 	return 0;
 }
 
+//TODO
 static void sstf_add_request(struct request_queue *q, struct request *rq)
 {
 	struct sstf_data *nd = q->elevator->elevator_data;
@@ -54,7 +60,8 @@ static struct request *
 sstf_latter_request(struct request_queue *q, struct request *rq)
 {
 	struct sstf_data *nd = q->elevator->elevator_data;
-
+    //Print Kernel
+    printk(KERN_INFO "Latter\n");
 	if (rq->queuelist.next == &nd->queue)
 		return NULL;
 	return list_entry(rq->queuelist.next, struct request, queuelist);
@@ -82,6 +89,8 @@ static int sstf_init_queue(struct request_queue *q, struct elevator_type *e)
 	spin_lock_irq(q->queue_lock);
 	q->elevator = eq;
 	spin_unlock_irq(q->queue_lock);
+    //Print Kernel
+    printk(KERN_INFO "init queue\n");
 	return 0;
 }
 
@@ -91,6 +100,8 @@ static void sstf_exit_queue(struct elevator_queue *e)
 
 	BUG_ON(!list_empty(&nd->queue));
 	kfree(nd);
+    //Print Kernel
+    printk(KERN_INFO "exit queue");
 }
 
 static struct elevator_type elevator_sstf = {
@@ -106,6 +117,11 @@ static struct elevator_type elevator_sstf = {
 	.elevator_name = "sstf",
 	.elevator_owner = THIS_MODULE,
 };
+//TODO
+static int sstf_init_queue(struct request_queue *q, struct elevator_type *e)
+{
+    
+}
 
 static int __init sstf_init(void)
 {
