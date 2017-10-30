@@ -19,9 +19,9 @@ static void sstf_merged_requests(struct request_queue *q, struct request *rq,
 }
 
 // Change this method. 
-static int noop_dispatch(struct request_queue *q, int force)
+static int sstf_dispatch(struct request_queue *q, int force)
 {
-	struct noop_data *nd = q->elevator->elevator_data;
+	struct sstf_data *nd = q->elevator->elevator_data;
 
 	if (!list_empty(&nd->queue)) {
 		struct request *rq;
@@ -61,9 +61,9 @@ sstf_latter_request(struct request_queue *q, struct request *rq)
 }
 
 // Change this method. 
-static int noop_init_queue(struct request_queue *q, struct elevator_type *e)
+static int sstf_init_queue(struct request_queue *q, struct elevator_type *e)
 {
-	struct noop_data *nd;
+	struct sstf_data *nd;
 	struct elevator_queue *eq;
 
 	eq = elevator_alloc(q, e);
