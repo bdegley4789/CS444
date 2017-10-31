@@ -12,6 +12,8 @@ struct sstf_data {
 	struct list_head queue;
 };
 
+sector_t temp = -1;
+
 static void sstf_merged_requests(struct request_queue *q, struct request *rq,
 				 struct request *next)
 {
@@ -54,10 +56,22 @@ static void sstf_add_request(struct request_queue *q, struct request *rq)
 	list_for_each(head, &nd->queue) {
         struct request *entry = list_entry(head, struct request, queueList);
         printk(KERN_INFO "Cycle through queue\n");
-	}
-	
-	// other
+        sector_t new_sector = blk_rq_pos(rq);
+        sector_t cur_sector = blk_rq_pos(c);
+        if(temp>blk_rq_pos(rq)){
+            if (new_sector>cur_sector || cur_sector > temp) {
+                break;
+            }
+        } else {
+            if (cur_sector > temp && new_sector > cur_sector) {
+                break;
+            }
+        }
+    }
+	//Adds to the tail
 	list_add_tail(&rq->queuelist, &nd->queue);
+    printk(KERN_INFO "Adding Finished\n");
+    printk(KERN_INFO "Count: %d\n",nd->queue_count);
 }
 
 static struct request *
