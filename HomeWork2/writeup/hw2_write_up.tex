@@ -15,15 +15,15 @@
 
 % -----------------------------------------------
 % The preamble that follows can be ignored. Go on
-% down to the section that says "START HERE" 
+% down to the section that says "START HERE"
 % -----------------------------------------------
 
 \documentclass{article}
 
-\usepackage[margin=1in]{geometry} 
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amsthm,amssymb}
 
-\newcommand{\R}{\mathbb{R}}  
+\newcommand{\R}{\mathbb{R}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -73,12 +73,22 @@
 % commands with "solution".
 % -----------------------------------------------------
 
+% ---------------------------------------------------------
+% Design Plan
+%----------------------------------------------------------
+\section*{Design Plan}
+Our Design Plan
+\newline
+
+% ---------------------------------------------------------
+% Questions
+%----------------------------------------------------------
 \section*{Questions}
 
 \begin{question}{1}
 What do you think the main point of this assignment is?
 \end{question}
-The main point of this assignment was to set up the os2 server for future projects in this class. Another point of this assignment was to become familiar working with a partner. It allowed us to experience how challenging future assignment will be for CS 444. 
+TODO
 
 % -----------------------------------------------------
 % Second problem
@@ -88,9 +98,7 @@ The main point of this assignment was to set up the os2 server for future projec
 
 \begin{question}{2}
 How did you personally approach the problem? Design decisions, algorithm, etc.\end{question}
-How I approached the problem was by identifying the problem. Next, I listed the objectives in chronological order. The kernel side of the assignment was a bit confusing so I decided to reread the assignment multiple times. I also received into from my partner about what he though about the assignment.   
-For the concurrency assignment, I realized that the problem had to be divided into parts, such as creating the client, server, and thread. 
-
+TODO
 
 % -----------------------------------------------------
 % Third problem
@@ -99,10 +107,9 @@ For the concurrency assignment, I realized that the problem had to be divided in
 \vspace{0.25in} % This adds some space between problems 2 and 3.
 
 \begin{question}{3}
-How did you ensure your solution was correct? Testing details, for instance. 
+How did you ensure your solution was correct? Testing details, for instance.
 \end{question}
-The way we ensured that the solution was correct was by reading the instructions carefully. We did our best to try to understand what was being ask. We also tested the concurrency program by running program and checking that the values each functions is producing/consuming are fluctuating. 
-
+TODO
 
 % ---------------------------------------------------------
 % Fourth problem
@@ -112,230 +119,64 @@ The way we ensured that the solution was correct was by reading the instructions
 \begin{question}{4}
 What did you learn?
 \end{question}
-We learned that when problems do not seem clear, one should come back later and reread the instructions again. This technique allowed me to come back to the problem with prior experience of unfamiliar technical words. 
-
+TODO
 
 % ---------------------------------------------------------
-% Command Log
+% Fifth problem
 %----------------------------------------------------------
-\section*{Command Log}
+
 \vspace{0.25in}
-\textit Bryce Egley and Bruce Garcia
-\newline
-\textit CS 444 Project 1: Getting Acquainted
-\newline
-\textit 1. Log onto os2 class and go to scratch/fall2017
-\newline
-\textit ssh os2
-\newline
-\textit cd ..
-\newline
-\textit cd /scratch/fall2017/
-\newline
-\newline
-\textit 2. Make your folder our group is 13 so do this command
-\newline
-\textit mkdir 13
-\newline
-\newline
-\textit 3. Get the yocto kernel
-\newline
-\textit git clone git://git.yoctoproject.org/linux-yocto-3.19
-\newline
-\newline
-\textit 4. Switch to v3.19.2 tag and go back one directory
-\newline
-\textit git checkout v3.19.2
-\newline
-\textit cd ..
-\newline
-\newline
-\textit 5 Copy the following for your setup
-\newline
-\textit cp /scratch/files/environment-setup-i586-poky-linux* ./
-\newline
-\textit cp /scratch/files/bzImage-qemux86.bin ./
-\newline
-\textit cp /scratch/files/core-image-lsb-sdk-qemux86.ext4 ./
-\newline
-\newline
-\textit 6 Set up environment for the kernel with the following commands
-\newline
-\textit source environment-setup-i586-poky-linux.csh
-\newline
-\textit cd linux-yocto-3.19
-\newline
-\newline
-\textit 7 Make build the kernel. Make sure to do make clean first
-\newline
-\textit make clean
-\newline
-\textit make tags
-\newline
-\textit make TAGS
-\newline
-\textit cp /scratch/files/config-3.19.2-yocto-standard ./.config
-\newline
-\newline
-\textit 8 Change kernels settings by entering this command
-\newline
-\textit make menuconfig
-\newline
-\newline
-\textit 9 Go to ‘General setup’, then go to ‘local version’ Change the local name to
-\newline
-\textit -group13-hw1 or another name for a different hw and save as a .config then exit
-\newline
-\textit 10 Compile
-\newline
-\textit make -j4 bzImage
-\newline
-\newline
-\textit 11 Test the kernel
-\newline
-\textit qemu-system-i386 -gdb tcp::5513 -S -nographic -kernel bzImage-qemux86.bin \
-\newline
-\textit -drive file=core-image-lsb-sdk-qemux86.ext4,if=virtio -enable-kvm -net none \
-\newline
-\textit -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
-\newline
-\newline
-\textit 12 Connect to GDB in another terminal window go to linux-yocto-3.19 and enter
-\newline
-\textit gdb
-\newline
-\newline
-\textit 13 Connect with TCP
-\newline
-\textit target remote:5513
-\newline
-\textit continue
-\newline
-\newline
-\textit 14 In your first terminal window login to qemux86
-\newline
-\textit root
-\newline
-
-% ---------------------------------------------------------
-% Meaning of Commands
-%----------------------------------------------------------
-\section*{Meaning of Commands}
-\textit{qemu-system-i386} : It is calling a specific CPU.
-\newline
-\textit{-gdb} : Potential debugging usage.
-\newline
-\textit{tcp::5013} : Connect to port number 5013 using TCP protocol. 
-\newline
-\textit{-S} : Sort by size.
-\newline
-\textit{-nographic} : No graphical usage (Only text-based).
-\newline
-\textit{-kernel} : Use only the kernel of the OS.
-\newline
-\textit{bzImage-qemux86.bin} : Use x86 processor.
-\newline
-\textit{-drive} : Use one drive. 
-\newline
-\textit{file=core-image-lsb-sdk-qemux86.ext4,if=virtio} : Store the kernel in variable file, if kernel is virtual.
-\newline
-\textit{-enable-kvm} : Use kernel virtual machine.
-\newline
-\textit{-net} : Turn on network compatibility.
-\newline
-\textit{none} : Not applicable.
-\newline
-\textit{-usb} : One USB slot.
-\newline
-\textit{-localtime} : Use current location time for OS.
-\newline
-\textit{--no-reboot} : No restarting the OS.
-\newline
-\textit{--append} : Allow user to add basic OS features. 
-\newline
-\textit{"root=/dev/vda rw console=ttyS0 debug"} : Root setting location and remove console of type ttys0.
-\newline
+\begin{question}{4}
+How should the TA evaluate your work? Provide detailed steps to prove correctness.
+\end{question}
+TODO
 
 % ---------------------------------------------------------
 % Version Control Log
 %----------------------------------------------------------
 \section*{Version Control Log}
 \textit{Table of Version Control Log} Ran command 'git log --graph --oneline'
-\newline 
+\newline
 \begin{center}
 \begin{tabular}{ c c }
- * 02093dd & Fixed length, none above 80 chars \\ 
- * ed9cde8 & Fixed print \\  
- * 77ffd70 & Added comments on pthreads \\ 
- * 86548f9 & Added error checking to pthread and mutex init \\  
- * 85762ea & Fixed mutex lock problem \\ 
- * 809d6e7 & updated pthreads \\ 
- * 3970511 & Added Pthreads \\ 
- * 4b46c3b & Add files via upload \\   
- * 1147902 & first commit    
+* 1bceaac Finished add request \\
+* a72882d Cycle though queue \\
+* b84eb71 added request func \\
+* 6bf0183 Removed duplicate init method \\
+* 48979c0 Print Kernel changes \\
+* 785f98e changed var names \\
+* be170ff modifed noop to sstf \\
+* 044ab88 Create HW2 Directory \\
+* 8932df9 Decrement numbers on phil \\
+* 06f2a68 Fixed print \\
+* 0b62556 Fixed lines print \\
+* e7d70f5 Fixed display names \\
+* dbfbc85 Fixed print names \\
+* fb9697f Fixed print \\
+* 972647d Fixed compile errors \\
+* 90c8bd4 Removed fork structure \\
+* 5efda41 delete philosopher name \\
+* fca30a7 Fixed print \\
+* 7eb6578 fixed comp errors \\
+* af6c168 Fixed wait error \\
+* 751afa1 fixed compling errors \\
+* c659d3f created Makefile
 \end{tabular}
 \end{center}
-
-% ---------------------------------------------------------
-% Concurrency Write Up
-%----------------------------------------------------------
-\section*{Concurrency Write Up}
-Bryce Egley and Bruce Garcia
-\newline
-CS 444 Project 1: Concurrency Exercise Write-up
-\newline
-\newline
-To solve the concurrency Producer-Consumer Problem I first drew a visualization of how this program would be solved. 
-\newline
-\newline
-Producers would create new data which would be a struct that had an int for a number 1-100 and a second int for time to consume which would be between 2-9 seconds. Along with this I also had the producer generate another random number in range 3-7 seconds which the producer would the wait that amount of time before producing a second item. After the producer method created a new struct of data it would increment the count (the total number of pieces of data in the buffer) it would also add the data to the buffer. Additionally, if the buffer ever became full then the producer thread would wait for the consumer thread to consume data from the buffer. 
-\newline
-\newline
-Consumers would wait for producers to populate the buffer if the buffer was empty. The consumer would print out the data as well as the count and the total wait time. The assignment description said we only needed to print out the data and I left that as an option to comment out. I figured the more information the user could see the better. After consuming an item, the consumer thread would decrement the count. 
-\newline
-\newline
-Since the count and the array buffer would be a shared resource between the producer and consumer threads I had to use mutely lock threads so I could unlock the producer and consumer when a shared resource needed to be used by the other and so I could lock the shared resource when it needed to be used exclusively by one thread, i.e. when the producer was adding a new data and incrementing the count or when the consumer was consuming a data and decrementing the count. I also used conditional variables since I needed to wait for consumer and producer threads to act on certain events like incrementing or decrementing count and adding and consuming data from the array buffer.
-\newline
-\newline
-When creating all the pthreads, conditional variables and joining threads I checked that no errors were produced and I destroyed the threads at the end of the program so there wouldn’t be anything still executing after the program was over. For random numbers, I used the genrandint32 command from the mt19937ar.c file provided to us. I had to comment out the main method in this file since the compiler kept giving me errors when I left it.
-
 
 % ---------------------------------------------------------
 % Work Log
 %----------------------------------------------------------
 \section*{Work Log}
-October 2, 2017: We read and analyzed assignment 1. We worked on the kernel side of the project. We created our group folder 13. The necessary files to run the kernel Were copied.
+October 29, 2017: (2 hours) We read and analyzed assignment 2. And planned out how we would complete the look algorithm.
 \newline
-October 5, 2017: Concurrency side of the assignment was started. The first two functions developed were the client and the server. Also a hidden git file was created for commits.
+October 30, 2017: (3 hours) We went to the block folder in linux yocto and looked over the noop-iosched.c file. We renamed it to the assignment name ssftp.c
+Then we tried to figure out what it did.
+We looked up how to use the Kernel Print to use the program we would write. We added kernel print to all the non-struct methods.
 \newline
-October 7, 2017: We reviewed the basics of threading. Next, we integrated it with the client and server function, respectively. 
-\newline
-October 9, 2017: Finished the kernel side of the project. At first difficulties were encountered, but Bryce was able to solve the problem. Next, the write up report was written. The proper format was learned within a short time and assignment 1 was submitted.  
-
+October 30, 2017: (4 hours) We implemented the add request function for the look algorithm.
 % -----------------------------------------------
 % Ignore everything that appears below this.
 % -----------------------------------------------
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
