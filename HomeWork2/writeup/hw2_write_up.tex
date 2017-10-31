@@ -1,6 +1,6 @@
 
 % ===============================================
-% CS444: HW1 Getting started         Fall 2017
+% CS444: HW2 I/O Elevators         Fall 2017
 % hw_revised.tex
 % Template for revised homework submission
 % ===============================================
@@ -50,7 +50,7 @@
 %                 START HERE                 %
 % ------------------------------------------ %
 
-\title{HW1 Report} % Replace X with the appropriate number
+\title{HW2 Report} % Replace X with the appropriate number
 \author{Bryce Egley, Bruce Garcia\\CS 444} % Replace "Author's Name" with your name
 
 \maketitle
@@ -79,6 +79,7 @@
 \section*{Design Plan}
 Our Design Plan
 \newline
+The Clock algorithm is a disk scheduling algorithm. This works with a circular linked list which we first used in Data Structures. This determines the order for read and write requests. If there aren’t any request in the head direction then the algorithm will reverse and move the opposite way. To implement this we first checked if the queue was empty and added a new request if it was. Then we moved through the queue and compared values. We then would add the new current value to the tail when we found the one next in order.
 
 % ---------------------------------------------------------
 % Questions
