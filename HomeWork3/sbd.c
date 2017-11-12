@@ -63,42 +63,41 @@ static struct sbd_device {
 static void sbd_transfer(struct sbd_device *dev, sector_t sector,
 		unsigned long nsect, char *buffer, int write) 
 {
-
 	unsigned long offset = sector * logical_block_size;
 	unsigned long nbytes = nsect * logical_block_size;
-
-	u8 *destination;
-	u8 *source;
-
-	cripto_cipher_setkey(crypto, key, length);
-
+	u8 *place1
+	u8 *place2;
+	crypto_cipher_setkey(crypto, key, length);
 	if ((offset + nbytes) > dev->size) {
 		printk (KERN_NOTICE "sbd: Beyond-end write (%ld %ld)\n", offset, nbytes);
 		return;
 	}
-	
+    place1 = buffer;
+    place2 = dev->data + offset;
 	if (write) {
 		printk("Encrpyting...");
-		source = buffer;
-		destination = dev->data + offset;
 		for (int i = 0; i < nbytes; i += crypto_cipher_blocksize(crypto)) {
-			crypto_cipher_encrypt_one(dev->blockcipher,
-									  destination + i,
-									  source + i);
+			crypto_cipher_encrypt_one(dev->blockcipher,place2 + i,place1 + i);
 		}
-
-		for(int j = 0; j < nbytes; j++) {
-			printk("Encripted code: ", *(source+i));
-		}
+        printk("Decrypted Code: ");
+        print(nbytes,place1);
+        printk("Encrypted Code: ");
+        print(nbytes,place2);
 	} else {
 		printk("Decrypting...");
-		for (int i = 0; i < nbytes; i+=crypto_cipher_blocksize(crypto))
-		{
-			crypto_cipher_decrypt_one(dev->blockcipher,
-									  destination + i,
-									  source + i);
+		for (int i = 0; i < nbytes; i+=crypto_cipher_blocksize(crypto)) {
+			crypto_cipher_decrypt_one(dev->blockcipher,place1 + i,place2 + i);
 		}
+        printk("Encrypted Code: ");
+        print(nbytes,place2);
+        printk("Decrypted Code: ");
+        print(nbytes,place1);
 	}
+}
+static void print(unsigned long nbytes, u8 *place) {
+    for(int j = 0; j < nbytes; j++) {
+        printk("%u", (unsigned) *(place+j));
+    }
 }
 
 static void sbd_request(struct request_queue *q) {
