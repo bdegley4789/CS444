@@ -76,11 +76,12 @@ static void sbd_transfer(struct sbd_device *dev, sector_t sector,
 		printk (KERN_NOTICE "sbd: Beyond-end write (%ld %ld)\n", offset, nbytes);
 		return;
 	}
+	
 	if (write) {
 		printk("Encrpyting...");
 		source = buffer;
 		destination = dev->data + offset;
-		for (int i = 0; i < nbytes; i += crypto_cipher_blocksize(crypto) {
+		for (int i = 0; i < nbytes; i += crypto_cipher_blocksize(crypto)) {
 			crypto_cipher_encrypt_one(dev->blockcipher,
 									  destination + i,
 									  source + i);
