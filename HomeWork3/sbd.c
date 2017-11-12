@@ -5,6 +5,7 @@
  * (C) 2010 Pat Patterson <pat at superpat dot com>
  * Redistributable under the terms of the GNU GPL.
  */
+//Source Code from http://blog.superpat.com/2010/05/04/a-simple-block-driver-for-linux-kernel-2-6-31/
 
 #include <linux/module.h>
 #include <linux/moduleparam.h>
@@ -18,9 +19,15 @@
 #include <linux/genhd.h>
 #include <linux/blkdev.h>
 #include <linux/hdreg.h>
+//For crypto
+#include <linux/crypto.h>
 
 MODULE_LICENSE("Dual BSD/GPL");
 static char *Version = "1.4";
+
+static char *key = "cs444";
+static int length = 5;
+struct crypto_cipher *crypto;
 
 static int major_num = 0;
 module_param(major_num, int, 0);
@@ -189,6 +196,9 @@ out:
 
 static void __exit sbd_exit(void)
 {
+    //Finished, free crypto
+    crypto_free_cipher(crypto);
+    
 	del_gendisk(Device.gd);
 	put_disk(Device.gd);
 	unregister_blkdev(major_num, "sbd");
