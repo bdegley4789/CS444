@@ -88,6 +88,8 @@ Our Design Plan
 \begin{question}{1}
 What do you think the main point of this assignment is?
 \end{question}
+I think that the main point of this assignment was to learn about the Linux block drivers. And the best way to learn about block drivers is to actually build one. However, we did not build one from scratch; there was a template provided for us from the textbook. In addition, we also learned the struggle of reading unfamiliar code. And that the driver reads and writes in blocks; it reads each segment of the disk. Also since we didn't know the behavior of each function, we had to research what the functions were achieving. My partner and I divided the work so what we could understand the block driver. Further, working with a partner in the assignment helped us keep each other accountable; there was no room for procrastination. We also got experience using version control. We needed to delegate our work so that we both work not working on the same thing and thus, avoid wasting our time. 
+
 
 
 
@@ -100,6 +102,7 @@ What do you think the main point of this assignment is?
 \begin{question}{2}
 How did you personally approach the problem? Design decisions, algorithm, etc.
 \end{question}
+First, we identified the problem. Which was that we needed to create a block driver. Since we didn’t know much about the block driver, we started to read the Block I/O Layer chapter from the textbook. In addition, the link that proved to be useful was the website the textbook referenced. It had a simple block driver implemented. After we analyzed the code from the c file, we modified the transfer function because this was the function that handled the I/O. We knew that we had to encrypt and decrypt the data, so we analyzed the code to see where the encryption and decryption process should take place. Further, we researched for a function what would be able to encrypt a block of memory. We found crypto_cipher_encrypt_one and crypto_cipher_decrypt_one are the two functions that were needed for the encryption and decryption of the block. After the encryption and decryption were solved, we decided to run the kernel. However, we ran into a problem; the command qemu etc was not working. But we managed to solve the error by deleting the forward slashed that was implemented on the command line. 
 
 
 
@@ -112,6 +115,7 @@ How did you personally approach the problem? Design decisions, algorithm, etc.
 \begin{question}{3}
 How did you ensure your solution was correct? Testing details, for instance.
 \end{question}
+The way we ensured that our solution was correct was by running the kernel with the block driver, that we created, in the driver/block directory. We did not encounter any bug error, so this was a good sign that everything was going well. I proceeded to verify my result from my partner; he said that everything seems to be running fine.
 
 
 % ---------------------------------------------------------
@@ -122,6 +126,7 @@ How did you ensure your solution was correct? Testing details, for instance.
 \begin{question}{4}
 What did you learn?
 \end{question}
+What we learned from this assignment was, obviously that the block has a very important role in the operating system. It provides a method of switching randomly accessible data to fixed-size blocks. In addition, I learned that working with a partner is extremely useful because when I was stuck on trying to find information about the simple block driver but my partner showed me a useful resource. Also, the ability to search for information was vital for this assignment. In addition, we learned that the kernel has many libraries that we as programmers still have to learn about. 
 
 
 
@@ -133,6 +138,7 @@ What did you learn?
 \begin{question}{5}
 How should the TA evaluate your work? Provide detailed steps to prove correctness.
 \end{question}
+The TA should do the following instructions: run the kernel. After the kernel is on halt, open up another terminal. Further, type gdb. And enter target 5013 then press enter. Enter continue them press enter. This will show you that the kernel was able to compile. Thus, the block driver was able to register withe the kernel, then, executed without a problem. 
 
 
 
