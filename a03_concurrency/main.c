@@ -18,7 +18,10 @@ typedef struct status {
     char status[15];
 } Status;
 
-Status arrPhilosophers[maxSize];
+//Three resources the process will work on
+Status resource1[maxSize];
+Status resource2[maxSize];
+Status resource3[maxSize];
 
 char names [maxSize][15] = {"one", "two","three","four"};
 
