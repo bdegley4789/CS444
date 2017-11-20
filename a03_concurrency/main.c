@@ -20,9 +20,9 @@ typedef struct status {
 
 Status arrPhilosophers[maxSize];
 
-char names [maxSize][15] = {"plato", "aristotle","socrates","confucius","epicurus"};
+char names [maxSize][15] = {"one", "two","three","four"};
 
-pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
+pthread_cond_t thread_one, thread_two, thread_three, thread_four;
 pthread_mutex_t thread_mutex;
 
 void think() {
@@ -98,53 +98,43 @@ void put_forks(int n, pthread_cond_t phil) {
     print_results();
 }
 
-void *plato(void* ptr)
+void *one(void* ptr)
 {
     while(1) {
         think();
-        get_forks(0,thread_plato);
+        get_forks(0,thread_one);
         eat();
-        put_forks(0,thread_plato);
+        put_forks(0,thread_one);
     }
 }
 
-void *aristotle(void* ptr)
+void *two(void* ptr)
 {
     while(1) {
         think();
-        get_forks(1,thread_aristotle);
+        get_forks(1,thread_two);
         eat();
-        put_forks(1,thread_aristotle);
+        put_forks(1,thread_two);
     }
 }
 
-void *socrates(void* ptr)
+void *three(void* ptr)
 {
     while(1) {
         think();
-        get_forks(2,thread_socrates);
+        get_forks(2,thread_three);
         eat();
-        put_forks(2,thread_socrates);
+        put_forks(2,thread_three);
     }
 }
 
-void *confucius(void* ptr)
+void *four(void* ptr)
 {
     while(1) {
         think();
-        get_forks(3,thread_confucius);
+        get_forks(3,thread_four);
         eat();
-        put_forks(3,thread_confucius);
-    }
-}
-
-void *epicurus(void* ptr)
-{
-    while(1) {
-        think();
-        get_forks(4,thread_epicurus);
-        eat();
-        put_forks(4,thread_epicurus);
+        put_forks(3,thread_four);
     }
 }
 
@@ -152,11 +142,10 @@ int main() {
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
     // Thread ID.
-    pthread_t tidPlato;
-    pthread_t tidAristotle;
-    pthread_t tidSocrates;
-    pthread_t tidConfucius;
-    pthread_t tidEpicurus;
+    pthread_t pid_one;
+    pthread_t pid_two;
+    pthread_t pid_three;
+    pthread_t pid_four;
     
     //Create mutex so threads can both use shared resource
     if(pthread_mutex_init(&thread_mutex, NULL)) {
@@ -165,39 +154,34 @@ int main() {
     }
     
     //Initialize conditional vars so thread can wait until condition occurs
-    pthread_cond_init(&thread_plato, NULL);
-    pthread_cond_init(&thread_aristotle, NULL);
-    pthread_cond_init(&thread_socrates, NULL);
-    pthread_cond_init(&thread_confucius, NULL);
-    pthread_cond_init(&thread_epicurus, NULL);
+    pthread_cond_init(&thread_one, NULL);
+    pthread_cond_init(&thread_two, NULL);
+    pthread_cond_init(&thread_three, NULL);
+    pthread_cond_init(&thread_four, NULL);
     
     // Create consumer and producer thread.
-    pthread_create(&tidPlato, NULL, plato, NULL);
-    printf("PLato thread created.\n");
-    pthread_create(&tidAristotle, NULL, aristotle, NULL);
-    printf("Aristotle thread created.\n");
-    pthread_create(&tidSocrates, NULL, socrates, NULL);
-    printf("Socrates thread created.\n");
-    pthread_create(&tidConfucius, NULL, confucius, NULL);
-    printf("Confucius thread created.\n");
-    pthread_create(&tidEpicurus, NULL, epicurus, NULL);
-    printf("Epicurus thread created.\n");
+    pthread_create(&pid_one, NULL, one, NULL);
+    printf("Thread 1 created.\n");
+    pthread_create(&pid_two, NULL, two, NULL);
+    printf("Thread 2 created.\n");
+    pthread_create(&pid_three, NULL, three, NULL);
+    printf("Thread 3 created.\n");
+    pthread_create(&pid_four, NULL, four, NULL);
+    printf("Thread 4 created.\n");
     printf("***************************************\n");
     
     // When done join threads.
-    pthread_join(tidPlato, NULL);
-    pthread_join(tidAristotle, NULL);
-    pthread_join(tidSocrates, NULL);
-    pthread_join(tidConfucius, NULL);
-    pthread_join(tidEpicurus, NULL);
+    pthread_join(pid_one, NULL);
+    pthread_join(pid_two, NULL);
+    pthread_join(pid_three, NULL);
+    pthread_join(pid_four, NULL);
     
     //Destroy pthreads so they don't continue after ctrl c
     pthread_mutex_destroy(&thread_mutex);
-    pthread_cond_destroy(&thread_plato);
-    pthread_cond_destroy(&thread_aristotle);
-    pthread_cond_destroy(&thread_socrates);
-    pthread_cond_destroy(&thread_confucius);
-    pthread_cond_destroy(&thread_epicurus);
+    pthread_cond_destroy(&thread_one);
+    pthread_cond_destroy(&thread_two);
+    pthread_cond_destroy(&thread_three);
+    pthread_cond_destroy(&thread_four);
     printf("Threads are completed.\n");
     
     exit(0);
