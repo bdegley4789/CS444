@@ -63,12 +63,14 @@ void print_help (Status resource, int num) {
     }
     printf("***************************************\n");
 }
-void get_resource(int n, pthread_cond_t phil) {
+void get_resource(int n, pthread_cond_t phil, char name [15]) {
     //Change philospher status
-    Status getFork;
+    Status getResource;
     //0 for false since you don't have the fork yet
-    getFork = (Status){.status = "Getting Fork",.fork = 0};
+    getResource = (Status){.status = name,.count = 0};
     pthread_mutex_lock(&thread_mutex);
+    //Find an open resource
+    find();
     arrPhilosophers[n] = getFork;
     //Print new status
     print_results();
@@ -83,6 +85,9 @@ void get_resource(int n, pthread_cond_t phil) {
     pthread_mutex_unlock(&thread_mutex);
     //Output new results
     print_results();
+}
+void find() {
+    
 }
 void release_resource(int n, pthread_cond_t phil) {
     //Change philospher status
