@@ -1,7 +1,7 @@
 //Bryce Egley and Bruce Garcia
 //CS 444
 //Concurrency exercise 3: Part 1
-//We re-used some of the code from concurrency exercise #1 and #2
+//We re-used some of the code from concurrency exercises #1 and #2
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
@@ -11,18 +11,19 @@
 #include <unistd.h>
 #include "mt19937ar.c"
 #include <assert.h>
-#define maxSize 4 //Table will hold 4 processes
+#define maxSize 3 //Table will hold 4 processes
 
 typedef struct status {
     char status[15];
+    int count;
 } Status;
 
 //Three resources the process will work on
-Status resource1[maxSize];
-Status resource2[maxSize];
-Status resource3[maxSize];
+Status resource1[3];
+Status resource2[3];
+Status resource3[3];
 
-char names [maxSize][15] = {"one", "two","three","four"};
+char names [4][15] = {"one", "two","three","four"};
 
 pthread_cond_t thread_one, thread_two, thread_three, thread_four;
 pthread_mutex_t thread_mutex;
@@ -44,18 +45,21 @@ void use() {
 //Print current results
 void print_results() {
     printf("Process Status\n");
+    print_help(resource1, 1);
+    print_help(resource2, 2);
+    print_help(resource3, 3);
+}
+void print_help (Status resource, int num) {
     int i;
+    int empty = 0
     for (i = 0; i < maxSize; i++) {
-        if (names[i].fork == 1) {
-            printf("Process %d is currently using resource %s\n",i+1,names[i]);
-        } else {
-            printf("Process %d is currently not using a resource\n",i+1);
+        if (resource[i].count == 1) {
+            printf("Resource %d is currently being used by process %s\n",num,resource[i].status);
+            empty = 1;
         }
     }
-    printf("Process Status\n");
-    int j;
-    for (j = 0; j < maxSize; j++) {
-        printf("%s is currently %s\n",names[j],arrPhilosophers[j].status);
+    if (empty == 0) {
+        printf("Resource %d is currently not being used by any resource\n",num);
     }
     printf("***************************************\n");
 }
