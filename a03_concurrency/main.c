@@ -1,7 +1,7 @@
 //Bryce Egley and Bruce Garcia
 //CS 444
-//Concurrency exercise 2: The Dining Philosophers Problem
-//We re-used some of the code from concurrency exercise #1
+//Concurrency exercise 3: Part 1
+//We re-used some of the code from concurrency exercise #1 and #2
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
@@ -11,10 +11,9 @@
 #include <unistd.h>
 #include "mt19937ar.c"
 #include <assert.h>
-#define maxSize 5 //Table will hold 5 plates and forks
+#define maxSize 4 //Table will hold 4 processes
 
 typedef struct status {
-    int fork;
     char status[15];
 } Status;
 
@@ -28,37 +27,39 @@ char names [maxSize][15] = {"one", "two","three","four"};
 pthread_cond_t thread_one, thread_two, thread_three, thread_four;
 pthread_mutex_t thread_mutex;
 
-void think() {
-    //Think for 1-20 seconds
-    unsigned int think_sleep = (genrand_int32() % 20) + 1;
-    while(think_sleep)
-        think_sleep = sleep(think_sleep);
+//Find a resource
+void find() {
+    //Find for 1-10 seconds
+    unsigned int find_sleep = (genrand_int32() % 9) + 1;
+    while(think_find)
+        find_sleep = sleep(find_sleep);
 }
-void eat() {
-    //Eat for 2-9 seconds
-    unsigned int eat_sleep = (genrand_int32() % 8) + 2;
-    while(eat_sleep)
-        eat_sleep = sleep(eat_sleep);
+//Use a resource
+void use() {
+    //Use for 1-20 seconds
+    unsigned int use_sleep = (genrand_int32() % 19) + 1;
+    while(use_sleep)
+        use_sleep = sleep(use_sleep);
 }
 //Print current results
 void print_results() {
-    printf("Fork Status\n");
+    printf("Process Status\n");
     int i;
     for (i = 0; i < maxSize; i++) {
-        if (arrPhilosophers[i].fork == 1) {
-            printf("Fork %d is currently held by %s\n",i+1,names[i]);
+        if (names[i].fork == 1) {
+            printf("Process %d is currently using resource %s\n",i+1,names[i]);
         } else {
-            printf("Fork %d is currently not being held\n",i+1);
+            printf("Process %d is currently not using a resource\n",i+1);
         }
     }
-    printf("Philosopher Status\n");
+    printf("Process Status\n");
     int j;
     for (j = 0; j < maxSize; j++) {
         printf("%s is currently %s\n",names[j],arrPhilosophers[j].status);
     }
     printf("***************************************\n");
 }
-void get_forks(int n, pthread_cond_t phil) {
+void get_resource(int n, pthread_cond_t phil) {
     //Change philospher status
     Status getFork;
     //0 for false since you don't have the fork yet
@@ -79,7 +80,7 @@ void get_forks(int n, pthread_cond_t phil) {
     //Output new results
     print_results();
 }
-void put_forks(int n, pthread_cond_t phil) {
+void release_resource(int n, pthread_cond_t phil) {
     //Change philospher status
     Status putFork;
     //1 for true since you still have the fork
@@ -104,40 +105,40 @@ void put_forks(int n, pthread_cond_t phil) {
 void *one(void* ptr)
 {
     while(1) {
-        think();
-        get_forks(0,thread_one);
-        eat();
-        put_forks(0,thread_one);
+        find();
+        get_resource(0,thread_one);
+        use();
+        release_resource(0,thread_one);
     }
 }
 
 void *two(void* ptr)
 {
     while(1) {
-        think();
-        get_forks(1,thread_two);
-        eat();
-        put_forks(1,thread_two);
+        find();
+        get_resource(1,thread_two);
+        use();
+        release_resource(1,thread_two);
     }
 }
 
 void *three(void* ptr)
 {
     while(1) {
-        think();
-        get_forks(2,thread_three);
-        eat();
-        put_forks(2,thread_three);
+        find();
+        get_resource(2,thread_three);
+        use();
+        release_resource(2,thread_three);
     }
 }
 
 void *four(void* ptr)
 {
     while(1) {
-        think();
-        get_forks(3,thread_four);
-        eat();
-        put_forks(3,thread_four);
+        find();
+        get_resource(3,thread_four);
+        use();
+        release_resource(3,thread_four);
     }
 }
 
