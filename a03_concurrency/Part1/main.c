@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include "mt19937ar.c"
 #include <assert.h>
+//For bool
+#include <stdbool.h>
 #define maxSize 3 //Table will hold 4 processes
 
 typedef struct status {
@@ -19,9 +21,9 @@ typedef struct status {
 } Status;
 
 //Three resources the process will work on
-Status resource1[3];
-Status resource2[3];
-Status resource3[3];
+Status resource1[maxSize];
+Status resource2[maxSize];
+Status resource3[maxSize];
 
 char names [4][15] = {"one", "two","three","four"};
 
@@ -32,7 +34,7 @@ pthread_mutex_t thread_mutex;
 void find() {
     //Find for 1-10 seconds
     unsigned int find_sleep = (genrand_int32() % 9) + 1;
-    while(think_find)
+    while(find_sleep)
         find_sleep = sleep(find_sleep);
 }
 //Use a resource
@@ -49,9 +51,9 @@ void print_results() {
     print_help(resource2, 2);
     print_help(resource3, 3);
 }
-void print_help (Status resource, int num) {
+void print_help (Status resource[maxSize], int num) {
     int i;
-    int empty = 0
+    int empty = 0;
     for (i = 0; i < maxSize; i++) {
         if (resource[i].count == 1) {
             printf("Resource %d is currently being used by process %s\n",num,resource[i].status);
@@ -85,12 +87,14 @@ void get_resource(int n, pthread_cond_t phil, char name [15]) {
     pthread_mutex_unlock(&thread_mutex);
 }
 //Find available resource
-bool isAvailable(Status resource) {
+bool isAvailable(Status resource[maxSize]) {
     //Set counts to 1. When release resource just release status but keep count
     if (resource[0].count != 0 && resource[1].count != 0 && resource[2].count != 0) {
-        return false
+        //Return 0 for false
+        return 0;
     }
-    return true;
+    //Return 1 for true
+    return 1;
 }
 //Release status set count to 2. When all counts are 2 fully release resource
 void release_resource(int n, pthread_cond_t phil, char name [15]) {
@@ -99,21 +103,21 @@ void release_resource(int n, pthread_cond_t phil, char name [15]) {
     //1 for true since you still have the fork
     relResource = (Status){.status = "",.count = 2};
     pthread_mutex_lock(&thread_mutex);
-    for (int i = 0; i < maxSize; i++) {
-        if (resource1[i].name == name) {
+    int i;
+    for (i = 0; i < maxSize; i++) {
+        if (resource1[i].status == name) {
             resource1[i] = relResource;
             isEmptied(resource1);
-        } else if (resource2[i].name == name) {
+        } else if (resource2[i].status == name) {
             resource2[i] = relResource;
             isEmptied(resource2);
-        } else if (resource3[i].name == name) {
+        } else if (resource3[i].status == name) {
             resource3[i] = relResource;
             isEmptied(resource3);
         } else {
-            printf"Error process not found!");
+            printf("Error process not found!");
         }
     }
-    
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
@@ -121,17 +125,18 @@ void release_resource(int n, pthread_cond_t phil, char name [15]) {
     //Output new results
     print_results();
 }
-void isEmptied() {
+void isEmptied(Status resource[maxSize]) {
     //Write code
+    printf("Releasing resource");
 }
 //Create first process
 void *one(void* ptr)
 {
     while(1) {
         find();
-        get_resource(0,thread_one);
+        get_resource(0,thread_one,names[1]);
         use();
-        release_resource(0,thread_one);
+        release_resource(0,thread_one,names[1]);
     }
 }
 //Create second process
@@ -139,9 +144,9 @@ void *two(void* ptr)
 {
     while(1) {
         find();
-        get_resource(1,thread_two);
+        get_resource(1,thread_two,names[2]);
         use();
-        release_resource(1,thread_two);
+        release_resource(1,thread_two,names[2]);
     }
 }
 //Create third process
@@ -149,9 +154,9 @@ void *three(void* ptr)
 {
     while(1) {
         find();
-        get_resource(2,thread_three);
+        get_resource(2,thread_three,names[3]);
         use();
-        release_resource(2,thread_three);
+        release_resource(2,thread_three,names[3]);
     }
 }
 //Create fourth process
@@ -159,9 +164,9 @@ void *four(void* ptr)
 {
     while(1) {
         find();
-        get_resource(3,thread_four);
+        get_resource(3,thread_four,names[4]);
         use();
-        release_resource(3,thread_four);
+        release_resource(3,thread_four,names[4]);
     }
 }
 
