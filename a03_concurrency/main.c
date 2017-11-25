@@ -67,50 +67,64 @@ void get_resource(int n, pthread_cond_t phil, char name [15]) {
     //Change philospher status
     Status getResource;
     //0 for false since you don't have the fork yet
-    getResource = (Status){.status = name,.count = 0};
+    getResource = (Status){.status = name,.count = 1};
     pthread_mutex_lock(&thread_mutex);
     //Find an open resource
-    find();
-    arrPhilosophers[n] = getFork;
+    if(isAvailable(resource1)) {
+        resource1[0] = getResource;
+    } else if (isAvailable(resource2)) {
+        resource2[0] = getResource;
+    } else if (isAvailable(resource3)) {
+        resource3[0] = getResource;
+    } else {
+        //This code should never occur
+        printf("Error all resources full!");
+    }
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
-    //Change Status
-    getFork = (Status){.status = "Eating",.fork = 1};
-    arrPhilosophers[n] = getFork;
-    //Lock Mutex for thread use
-    pthread_mutex_lock(&thread_mutex);
-    pthread_cond_signal(&phil);
-    ////Unlock mutex so other threads can use data structure
-    pthread_mutex_unlock(&thread_mutex);
-    //Output new results
-    print_results();
 }
-void find() {
-    
+//Find available resource
+bool isAvailable(Status resource) {
+    //Set counts to 1. When release resource just release status but keep count
+    if (resource[0].count != 0 && resource[1].count != 0 && resource[2].count != 0) {
+        return false
+    }
+    return true;
 }
-void release_resource(int n, pthread_cond_t phil) {
+//Release status set count to 2. When all counts are 2 fully release resource
+void release_resource(int n, pthread_cond_t phil, char name [15]) {
     //Change philospher status
-    Status putFork;
+    Status relResource;
     //1 for true since you still have the fork
-    putFork = (Status){.status = "Putting Fork",.fork = 1};
+    relResource = (Status){.status = "",.count = 2};
     pthread_mutex_lock(&thread_mutex);
-    arrPhilosophers[n] = putFork;
+    for (int i = 0; i < maxSize; i++) {
+        if (resource1[i].name == name) {
+            resource1[i] = relResource;
+            isEmptied(resource1);
+        } else if (resource2[i].name == name) {
+            resource2[i] = relResource;
+            isEmptied(resource2);
+        } else if (resource3[i].name == name) {
+            resource3[i] = relResource;
+            isEmptied(resource3);
+        } else {
+            printf"Error process not found!");
+        }
+    }
+    
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
-    //Change Status
-    putFork = (Status){.status = "Thinking",.fork = 0};
-    arrPhilosophers[n] = putFork;
-    //Lock Mutex for thread use
-    pthread_mutex_lock(&thread_mutex);
     pthread_cond_signal(&phil);
-    ////Unlock mutex so other threads can use data structure
-    pthread_mutex_unlock(&thread_mutex);
     //Output new results
     print_results();
 }
-
+void isEmptied() {
+    //Write code
+}
+//Create first process
 void *one(void* ptr)
 {
     while(1) {
@@ -120,7 +134,7 @@ void *one(void* ptr)
         release_resource(0,thread_one);
     }
 }
-
+//Create second process
 void *two(void* ptr)
 {
     while(1) {
@@ -130,7 +144,7 @@ void *two(void* ptr)
         release_resource(1,thread_two);
     }
 }
-
+//Create third process
 void *three(void* ptr)
 {
     while(1) {
@@ -140,7 +154,7 @@ void *three(void* ptr)
         release_resource(2,thread_three);
     }
 }
-
+//Create fourth process
 void *four(void* ptr)
 {
     while(1) {
