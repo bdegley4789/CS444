@@ -25,6 +25,17 @@ char names [maxSize][15] = {"plato", "aristotle","socrates","confucius","epicuru
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
 
+// Searchers
+// They merely examine the list; hence thye can execute concurrently w/ each other
+
+// Inserters
+// They add new items to the end of the list; they must be mutually exclusive to preclude 
+// two inserters from inserting new items at about the same time.
+
+// Deleters
+// They remove items from anywhre in the list. At most one deleter process can access
+// the list at a time, and deletion must also be mutually exclusive with searches and insertions.
+
 void think() {
     //Think for 1-20 seconds
     unsigned int think_sleep = (genrand_int32() % 20) + 1;
