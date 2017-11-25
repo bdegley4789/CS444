@@ -51,7 +51,7 @@ void print_results() {
     print_help(resource2, 2);
     print_help(resource3, 3);
 }
-void print_help (Status resource[maxSize], int num) {
+void print_help(Status resource[maxSize], int num) {
     int i;
     int empty = 0;
     for (i = 0; i < maxSize; i++) {
@@ -72,11 +72,11 @@ void get_resource(int n, pthread_cond_t phil, char name [15]) {
     getResource = (Status){.status = name,.count = 1};
     pthread_mutex_lock(&thread_mutex);
     //Find an open resource
-    if(isAvailable(resource1)) {
+    if(resource1[0].count != 0 && resource1[1].count != 0 && resource1[2].count != 0) {
         resource1[0] = getResource;
-    } else if (isAvailable(resource2)) {
+    } else if (resource2[0].count != 0 && resource2[1].count != 0 && resource2[2].count != 0) {
         resource2[0] = getResource;
-    } else if (isAvailable(resource3)) {
+    } else if (resource3[0].count != 0 && resource3[1].count != 0 && resource3[2].count != 0) {
         resource3[0] = getResource;
     } else {
         //This code should never occur
@@ -85,16 +85,6 @@ void get_resource(int n, pthread_cond_t phil, char name [15]) {
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
-}
-//Find available resource
-bool isAvailable(Status resource[maxSize]) {
-    //Set counts to 1. When release resource just release status but keep count
-    if (resource[0].count != 0 && resource[1].count != 0 && resource[2].count != 0) {
-        //Return 0 for false
-        return 0;
-    }
-    //Return 1 for true
-    return 1;
 }
 //Release status set count to 2. When all counts are 2 fully release resource
 void release_resource(int n, pthread_cond_t phil, char name [15]) {
