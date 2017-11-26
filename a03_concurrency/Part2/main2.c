@@ -62,7 +62,9 @@ node* prepend(node* head,int data)
     head = new_node;
     return head;
 }
-
+/*
+    add a new node at the end of the list
+*/
 node* append(node* head, int data)
 {
     if(head == NULL)
@@ -80,7 +82,7 @@ node* append(node* head, int data)
 }
 
 /*
-    Display all nodes in list
+    Display all nodes in the linked list
 */
 void displayAll(node *head)
 {
@@ -92,8 +94,9 @@ void displayAll(node *head)
         cursor = cursor->next;
     }
 }
-
-// Create a link list of five elements
+/*
+    Create a link list of five elements
+*/
 node* create_struct(node* theHead) {
 	
 	int iterations = 5;
