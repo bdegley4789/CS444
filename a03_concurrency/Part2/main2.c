@@ -261,14 +261,13 @@ void *deleter(void* ptr)
         }*/
         //think();
         printf("Deleter...\n");
+        sleep(4);
         state_deleter = ON;
         pthread_mutex_lock(&thread_mutex);
         if (count <= 0) {
             printf("LinkedList is empty. Waiting for inserter");
             pthread_mutex_unlock(&thread_mutex);
-            sleep(4);
         } else {
-            sleep(4);
             pthread_mutex_unlock(&thread_mutex);
             pthread_mutex_lock(&thread_mutex);
             printf("Item %d deleted\n",delete_item());
