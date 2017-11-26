@@ -195,6 +195,10 @@ int delete_item() {
  }
  }*/
 
+
+// Searcher
+// They merely examine the list; hence thye can execute concurrently w/ each other
+
 void *searcher(void* ptr)
 {
     while(1) {
@@ -202,12 +206,15 @@ void *searcher(void* ptr)
             printf("Waiting for deleter to finish");
         }*/
         //think();
-        pthread_mutex_lock(&thread_mutex);
+        //pthread_mutex_lock(&thread_mutex);
+        printf("Searcher...\n");
         if (count <= 0) {
             printf("LinkedList is empty. Waiting for inserter");
+            //pthread_mutex_unlock(&thread_mutex);
+
         } else {
             printf("Item %d found\n",search());
-            pthread_mutex_unlock(&thread_mutex);
+            //pthread_mutex_unlock(&thread_mutex);
         }
         //execute();
     }
@@ -226,6 +233,7 @@ void *inserter(void* ptr)
             printf("Waiting for inserter to finish");
         }*/
         //think();
+        printf("Inserter...\n");
         state_inserter = ON;
         pthread_mutex_lock(&thread_mutex);
         printf("Item %d inserted. Count %d\n",insert_item(),count);
@@ -235,6 +243,7 @@ void *inserter(void* ptr)
         //execute();
         //Change state
         state_inserter = OFF;
+        sleep(1);
     }
 }
 
@@ -251,11 +260,15 @@ void *deleter(void* ptr)
             printf("Waiting for inserter to finish");
         }*/
         //think();
+        printf("Deleter...\n");
         state_deleter = ON;
         pthread_mutex_lock(&thread_mutex);
         if (count <= 0) {
             printf("LinkedList is empty. Waiting for inserter");
+            pthread_mutex_unlock(&thread_mutex);
+            sleep(4);
         } else {
+            sleep(4);
             pthread_mutex_unlock(&thread_mutex);
             pthread_mutex_lock(&thread_mutex);
             printf("Item %d deleted\n",delete_item());
@@ -270,12 +283,14 @@ void *deleter(void* ptr)
 }
 
 int main() {
+
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
     head = NULL;
     head = create_struct(head);
+
     // Thread ID.
-        pthread_t tidDeleter;
+    pthread_t tidDeleter;
     pthread_t tidSearcher;
     pthread_t tidInserter;
     
