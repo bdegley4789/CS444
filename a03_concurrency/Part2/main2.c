@@ -24,7 +24,6 @@ typedef struct node {
 	struct node* next;
 } node;
 
-node *head;
 
 Status arrPhilosophers[maxSize];
 
@@ -33,35 +32,74 @@ char names [maxSize][15] = {"plato", "aristotle","socrates","confucius","epicuru
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
 
-
-// Create linked list
-node* create(int data, node* next) {
-	node* new_node = (node*) malloc(sizeof(node));
-	if(new_node = NULL) {
-		printf("Error creating a new node\n");
-		exit(0);
-	}
-
-	new_node->data = data;	
-	new_node->next = next;
-
-	return new_node;
+/*
+    create a new node
+    initialize the data and next field
+ 
+    return the newly created node
+*/
+node* create(int data,node* next)
+{
+    node* new_node = (node*)malloc(sizeof(node));
+    if(new_node == NULL)
+    {
+        printf("Error creating a new node.\n");
+        exit(0);
+    }
+    new_node->data = data;
+    new_node->next = next;
+ 
+    return new_node;
 }
 
-node* append(node* head, int data) {
-	node *cursor = head;	
+/*
+    add a new node at the beginning of the list
+*/
+node* prepend(node* head,int data)
+{
+    node* new_node = create(data,head);
+    head = new_node;
+    return head;
+}
 
-	// Go to next node.
-	while(cursor->next != NULL) {
-		cursor = cursor->next;
+node* append(node* head, int data)
+{
+    if(head == NULL)
+        return NULL;
+    /* go to the last node */
+    node *cursor = head;
+    while(cursor->next != NULL)
+        cursor = cursor->next;
+ 
+    /* create a new node */
+    node* new_node =  create(data,NULL);
+    cursor->next = new_node;
+ 
+    return head;
+}
+
+// Create a link list of five elements
+node* create_struct(node* theHead) {
+	
+	int iterations = 5;
+	int i;
+    init_genrand(time(NULL));
+
+    // Generate a number between 1-20
+    int number = (genrand_int32() % 20) + 1;    
+    theHead = prepend(theHead, number);
+
+
+	for(i = 0; i < iterations; i++) { 
+		// Generate a number between 1-20
+        number = (genrand_int32() % 20) + 1;    
+		theHead =  append(theHead, number);
+		printf("Current value %d\n", theHead->data);
 	}
 
-	// Create a new node.
-	node* new_node = create(data, NULL); 
-	cursor->next = new_node;
+	return theHead;
+};
 
-	return head;
-}
 
 // Searchers
 // They merely examine the list; hence thye can execute concurrently w/ each other
@@ -200,6 +238,9 @@ void *epicurus(void* ptr)
 int main() {
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
+	node *head = NULL;
+	head = create_struct(head);	
+
     // Thread ID.
     pthread_t tidPlato;
     pthread_t tidAristotle;
