@@ -1,6 +1,6 @@
 //Bryce Egley and Bruce Garcia
 //CS 444
-//Concurrency exercise 2: The Dining Philosophers Problem
+//Concurrency exercise 3:
 //We re-used some of the code from concurrency exercise #1
 #include <stdio.h>
 #include <string.h>
@@ -18,12 +18,50 @@ typedef struct status {
     char status[15];
 } Status;
 
+// Linked list structure 
+typedef struct node {
+	int data;
+	struct node* next;
+} node;
+
+node *head;
+
 Status arrPhilosophers[maxSize];
 
 char names [maxSize][15] = {"plato", "aristotle","socrates","confucius","epicurus"};
 
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
 pthread_mutex_t thread_mutex;
+
+
+// Create linked list
+node* create(int data, node* next) {
+	node* new_node = (node*) malloc(sizeof(node));
+	if(new_node = NULL) {
+		printf("Error creating a new node\n");
+		exit(0);
+	}
+
+	new_node->data = data;	
+	new_node->next = next;
+
+	return new_node;
+}
+
+node* append(node* head, int data) {
+	node *cursor = head;	
+
+	// Go to next node.
+	while(cursor->next != NULL) {
+		cursor = cursor->next;
+	}
+
+	// Create a new node.
+	node* new_node = create(data, NULL); 
+	cursor->next = new_node;
+
+	return head;
+}
 
 // Searchers
 // They merely examine the list; hence thye can execute concurrently w/ each other
