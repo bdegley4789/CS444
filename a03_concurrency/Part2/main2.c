@@ -31,14 +31,14 @@ pthread_cond_t thread_searcher, thread_inserter, thread_deleter;
 pthread_mutex_t thread_mutex;
 
 void think() {
-    //Think for 1-20 seconds
-    unsigned int think_sleep = (genrand_int32() % 20) + 1;
+    //Think for 1-5 seconds
+    unsigned int think_sleep = (genrand_int32() % 4) + 1;
     while(think_sleep)
         think_sleep = sleep(think_sleep);
 }
 void execute() {
-    //Eat for 2-9 seconds
-    unsigned int eat_sleep = (genrand_int32() % 8) + 2;
+    //Eat for 1-5 seconds
+    unsigned int eat_sleep = (genrand_int32() % 4) + 1;
     while(eat_sleep)
         eat_sleep = sleep(eat_sleep);
 }
@@ -87,12 +87,12 @@ node* append(node* head, int data)
     
     return head;
 }
-int find(node* theHead, int position)
+int find(int position)
 {
-    if(theHead==NULL)
+    if(head==NULL)
         return 0;
     /* Go to position */
-    node *cursor = theHead;
+    node *cursor = head;
     int i;
     for(i = 0; i < position; i++) {
         cursor = cursor->next;
@@ -150,7 +150,7 @@ void append2(int data)
 }
 int search() {
     unsigned int searchPos = genrand_int32() % count;
-    return find(head,searchPos);
+    return find(searchPos);
 }
 int insert_item() {
     //Random data 0-99999
@@ -164,7 +164,7 @@ int delete_item() {
     //Position to delete
     unsigned int deletePos = genrand_int32() % count;
     //Find data about to be deleted
-    int data = find(head,deletePos);
+    int data = find(deletePos);
     //Delete node at specific position
     delete(deletePos);
     //Decrement count
@@ -195,10 +195,16 @@ int delete_item() {
 void *searcher(void* ptr)
 {
     while(1) {
-        while(state_deleter == ON) {
+        /*while(state_deleter == ON) {
             printf("Waiting for deleter to finish");
+        }*/
+        //think();
+        pthread_mutex_lock(&thread_mutex);
+        while (count <= 0) {
+            printf("LinkedList is empty. Waiting for inserter");
+            return 0;
         }
-        think();
+        pthread_mutex_unlock(&thread_mutex);
         printf("Item %d found\n",search());
         execute();
     }
@@ -210,13 +216,13 @@ void *searcher(void* ptr)
 void *inserter(void* ptr)
 {
     while(1) {
-        while(state_deleter == ON) {
+        /*while(state_deleter == ON) {
             printf("Waiting for deleter to finish");
         }
         while(state_inserter == ON) {
             printf("Waiting for inserter to finish");
-        }
-        think();
+        }*/
+        //think();
         state_inserter = ON;
         pthread_mutex_lock(&thread_mutex);
         printf("Item %d inserted\n",insert_item());
@@ -233,13 +239,13 @@ void *inserter(void* ptr)
 void *deleter(void* ptr)
 {
     while(1) {
-        while(state_deleter == ON) {
+        /*while(state_deleter == ON) {
             printf("Waiting for deleter to finish");
         }
         while(state_inserter == ON) {
             printf("Waiting for inserter to finish");
-        }
-        think();
+        }*/
+        //think();
         state_deleter = ON;
         pthread_mutex_lock(&thread_mutex);
         while (count <= 0) {
@@ -274,28 +280,28 @@ int main() {
     }
     
     //Initialize conditional vars so thread can wait until condition occurs
-    pthread_cond_init(&thread_searcher, NULL);
     pthread_cond_init(&thread_inserter, NULL);
     pthread_cond_init(&thread_deleter, NULL);
+    pthread_cond_init(&thread_searcher, NULL);
     
     // Create consumer and producer thread.
-    pthread_create(&tidSearcher, NULL, searcher, NULL);
-    printf("Searcher thread created.\n");
     pthread_create(&tidInserter, NULL, inserter, NULL);
     printf("Inserter thread created.\n");
     pthread_create(&tidDeleter, NULL, deleter, NULL);
     printf("Deleter thread created.\n");
+    pthread_create(&tidSearcher, NULL, searcher, NULL);
+    printf("Searcher thread created.\n");
     
     // When done join threads.
-    pthread_join(tidSearcher, NULL);
     pthread_join(tidInserter, NULL);
     pthread_join(tidDeleter, NULL);
+    pthread_join(tidSearcher, NULL);
     
     //Destroy pthreads so they don't continue after ctrl c
     pthread_mutex_destroy(&thread_mutex);
-    pthread_cond_destroy(&thread_searcher);
     pthread_cond_destroy(&thread_inserter);
     pthread_cond_destroy(&thread_deleter);
+    pthread_cond_destroy(&thread_searcher);
     printf("Threads are completed.\n");
     
     exit(0);
