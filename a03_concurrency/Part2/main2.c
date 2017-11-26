@@ -2,6 +2,7 @@
 //CS 444
 //Concurrency exercise 3:
 //We re-used some of the code from concurrency exercise #1
+// Source: http://www.zentut.com/c-tutorial/c-linked-list/ 
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
@@ -78,6 +79,20 @@ node* append(node* head, int data)
     return head;
 }
 
+/*
+    Display all nodes in list
+*/
+void displayAll(node *head)
+{
+    node *cursor = head;
+
+    while(cursor != NULL)
+    {
+        printf("Node data: %d\n", cursor->data);
+        cursor = cursor->next;
+    }
+}
+
 // Create a link list of five elements
 node* create_struct(node* theHead) {
 	
@@ -91,10 +106,9 @@ node* create_struct(node* theHead) {
 
 
 	for(i = 0; i < iterations; i++) { 
-		// Generate a number between 1-20
+		// Generate a number between 2-21
         number = (genrand_int32() % 20) + 1;    
 		theHead =  append(theHead, number);
-		printf("Current value %d\n", theHead->data);
 	}
 
 	return theHead;
@@ -240,6 +254,9 @@ int main() {
     init_genrand(time(NULL));
 	node *head = NULL;
 	head = create_struct(head);	
+    displayAll(head);
+
+    return 0;
 
     // Thread ID.
     pthread_t tidPlato;
