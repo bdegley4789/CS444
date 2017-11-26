@@ -44,13 +44,6 @@ void use() {
     while(use_sleep)
         use_sleep = sleep(use_sleep);
 }
-//Print current results
-void print_results() {
-    printf("Process Status\n");
-    print_help(resource1, 1);
-    print_help(resource2, 2);
-    print_help(resource3, 3);
-}
 void print_help(Status resource[maxSize], int num) {
     int i;
     int empty = 0;
@@ -61,9 +54,16 @@ void print_help(Status resource[maxSize], int num) {
         }
     }
     if (empty == 0) {
-        printf("Resource %d is currently not being used by any resource\n",num);
+        printf("Resource %d is currently not being used by any processes\n",num);
     }
     printf("***************************************\n");
+}
+//Print current results
+void print_results() {
+    printf("Process Status\n");
+    print_help(resource1, 1);
+    print_help(resource2, 2);
+    print_help(resource3, 3);
 }
 void get_resource(int n, pthread_cond_t phil, char name [15]) {
     //Change philospher status
@@ -72,19 +72,41 @@ void get_resource(int n, pthread_cond_t phil, char name [15]) {
     getResource = (Status){.status = name,.count = 1};
     pthread_mutex_lock(&thread_mutex);
     //Find an open resource
-    if(resource1[0].count != 0 && resource1[1].count != 0 && resource1[2].count != 0) {
-        resource1[0] = getResource;
-    } else if (resource2[0].count != 0 && resource2[1].count != 0 && resource2[2].count != 0) {
-        resource2[0] = getResource;
-    } else if (resource3[0].count != 0 && resource3[1].count != 0 && resource3[2].count != 0) {
-        resource3[0] = getResource;
+    if(resource1[0].count == 0 || resource1[1].count == 0 || resource1[2].count == 0) {
+        if (resource1[0].count == 0) {
+            resource1[0] = getResource;
+        } else if (resource1[1].count == 0) {
+            resource1[1] = getResource;
+        } else {
+            resource1[2] = getResource;
+        }
+    } else if (resource2[0].count == 0 || resource2[1].count == 0 || resource2[2].count == 0) {
+        if (resource2[0].count == 0) {
+            resource2[0] = getResource;
+        } else if (resource2[1].count == 0) {
+            resource2[1] = getResource;
+        } else {
+            resource2[2] = getResource;
+        }
+    } else if (resource3[0].count == 0 || resource3[1].count == 0 || resource3[2].count == 0) {
+        if (resource3[0].count == 0) {
+            resource3[0] = getResource;
+        } else if (resource3[1].count == 0) {
+            resource3[1] = getResource;
+        } else {
+            resource3[2] = getResource;
+        }
     } else {
         //This code should never occur
-        printf("Error all resources full!");
+        printf("Error all resources full!\n");
     }
     //Print new status
     print_results();
     pthread_mutex_unlock(&thread_mutex);
+}
+void isEmptied(Status resource[maxSize]) {
+    //Write code
+    printf("Releasing resource\n");
 }
 //Release status set count to 2. When all counts are 2 fully release resource
 void release_resource(int n, pthread_cond_t phil, char name [15]) {
@@ -105,7 +127,7 @@ void release_resource(int n, pthread_cond_t phil, char name [15]) {
             resource3[i] = relResource;
             isEmptied(resource3);
         } else {
-            printf("Error process not found!");
+            printf("Error process not found!\n");
         }
     }
     //Print new status
@@ -114,10 +136,6 @@ void release_resource(int n, pthread_cond_t phil, char name [15]) {
     pthread_cond_signal(&phil);
     //Output new results
     print_results();
-}
-void isEmptied(Status resource[maxSize]) {
-    //Write code
-    printf("Releasing resource");
 }
 //Create first process
 void *one(void* ptr)
@@ -159,6 +177,16 @@ void *four(void* ptr)
         release_resource(3,thread_four,names[4]);
     }
 }
+void initResource(){
+    int i;
+    Status def;
+    for (i = 0; i < maxSize; i++){
+        def = (Status){.status = "",.count = 0};
+        resource1[i] = def;
+        resource2[i] = def;
+        resource3[i] = def;
+    }
+}
 
 int main() {
     //Have seed generate for random sequnce of numbers with genrand
@@ -168,6 +196,8 @@ int main() {
     pthread_t pid_two;
     pthread_t pid_three;
     pthread_t pid_four;
+    //Create resources
+    initResource();
     
     //Create mutex so threads can both use shared resource
     if(pthread_mutex_init(&thread_mutex, NULL)) {
