@@ -117,6 +117,7 @@ node* create_struct(node* theHead) {
         number = (genrand_int32() % 20) + 1;
         theHead =  append(theHead, number);
         printf("Current value %d\n", theHead->data);
+        count++;
     }
     return theHead;
 }
@@ -159,7 +160,6 @@ int insert_item() {
     unsigned int data = genrand_int32() % 100000;
     //Add new data to end of node
     append2(data);
-    count++;
     return data;
 }
 int delete_item() {
@@ -203,12 +203,12 @@ void *searcher(void* ptr)
         }*/
         //think();
         pthread_mutex_lock(&thread_mutex);
-        while (count <= 0) {
+        if (count <= 0) {
             printf("LinkedList is empty. Waiting for inserter");
-            return 0;
+        } else {
+            printf("Item %d found\n",search());
+            pthread_mutex_unlock(&thread_mutex);
         }
-        printf("Item %d found\n",search());
-        pthread_mutex_unlock(&thread_mutex);
         //execute();
     }
 }
@@ -228,7 +228,8 @@ void *inserter(void* ptr)
         //think();
         state_inserter = ON;
         pthread_mutex_lock(&thread_mutex);
-        printf("Item %d inserted\n",insert_item());
+        printf("Item %d inserted. Count %d\n",insert_item(),count);
+        count++;
         pthread_cond_signal(&thread_inserter);
         pthread_mutex_unlock(&thread_mutex);
         //execute();
@@ -252,19 +253,19 @@ void *deleter(void* ptr)
         //think();
         state_deleter = ON;
         pthread_mutex_lock(&thread_mutex);
-        while (count <= 0) {
+        if (count <= 0) {
             printf("LinkedList is empty. Waiting for inserter");
-            return 0;
+        } else {
+            pthread_mutex_unlock(&thread_mutex);
+            pthread_mutex_lock(&thread_mutex);
+            printf("Item %d deleted\n",delete_item());
+            //Unlock mutex for shared resource
+            pthread_cond_signal(&thread_deleter);
+            pthread_mutex_unlock(&thread_mutex);
+            //execute();
+            //Change State
+            state_deleter = OFF;
         }
-        pthread_mutex_unlock(&thread_mutex);
-        pthread_mutex_lock(&thread_mutex);
-        printf("Item %d deleted\n",delete_item());
-        //Unlock mutex for shared resource
-        pthread_cond_signal(&thread_deleter);
-        pthread_mutex_unlock(&thread_mutex);
-        //execute();
-        //Change State
-        state_deleter = OFF;
     }
 }
 
@@ -274,9 +275,9 @@ int main() {
     head = NULL;
     head = create_struct(head);
     // Thread ID.
+        pthread_t tidDeleter;
     pthread_t tidSearcher;
     pthread_t tidInserter;
-    pthread_t tidDeleter;
     
     //Create mutex so threads can both use shared resource
     if(pthread_mutex_init(&thread_mutex, NULL)) {
