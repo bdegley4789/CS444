@@ -195,8 +195,7 @@ int delete_item() {
 void *searcher(void* ptr)
 {
     while(1) {
-        sleep(1);
-        if(state_deleter == ON) {
+        while(state_deleter == ON) {
             printf("Waiting for deleter to finish");
         }
         think();
@@ -211,11 +210,10 @@ void *searcher(void* ptr)
 void *inserter(void* ptr)
 {
     while(1) {
-        sleep(1);
-        if(state_deleter == ON) {
+        while(state_deleter == ON) {
             printf("Waiting for deleter to finish");
         }
-        if(state_inserter == ON) {
+        while(state_inserter == ON) {
             printf("Waiting for inserter to finish");
         }
         think();
@@ -235,11 +233,10 @@ void *inserter(void* ptr)
 void *deleter(void* ptr)
 {
     while(1) {
-        sleep(1);
-        if(state_deleter == ON) {
+        while(state_deleter == ON) {
             printf("Waiting for deleter to finish");
         }
-        if(state_inserter == ON) {
+        while(state_inserter == ON) {
             printf("Waiting for inserter to finish");
         }
         think();
