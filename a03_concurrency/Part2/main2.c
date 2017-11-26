@@ -30,12 +30,12 @@ status_t state_inserter = OFF;
 pthread_cond_t thread_searcher, thread_inserter, thread_deleter;
 pthread_mutex_t thread_mutex;
 
-void think() {
+/*void think() {
     //Think for 1-5 seconds
     unsigned int think_sleep = (genrand_int32() % 4) + 1;
     while(think_sleep)
         think_sleep = sleep(think_sleep);
-}
+}*/
 void execute() {
     //Eat for 1-5 seconds
     unsigned int eat_sleep = (genrand_int32() % 4) + 1;
@@ -149,11 +149,13 @@ void append2(int data)
     cursor->next = new_node;
 }
 int search() {
+    execute();
     unsigned int searchPos = genrand_int32() % count;
     return find(searchPos);
 }
 int insert_item() {
     //Random data 0-99999
+    execute();
     unsigned int data = genrand_int32() % 100000;
     //Add new data to end of node
     append2(data);
@@ -162,6 +164,7 @@ int insert_item() {
 }
 int delete_item() {
     //Position to delete
+    execute();
     unsigned int deletePos = genrand_int32() % count;
     //Find data about to be deleted
     int data = find(deletePos);
@@ -204,9 +207,9 @@ void *searcher(void* ptr)
             printf("LinkedList is empty. Waiting for inserter");
             return 0;
         }
-        pthread_mutex_unlock(&thread_mutex);
         printf("Item %d found\n",search());
-        execute();
+        pthread_mutex_unlock(&thread_mutex);
+        //execute();
     }
 }
 
@@ -228,8 +231,9 @@ void *inserter(void* ptr)
         printf("Item %d inserted\n",insert_item());
         pthread_cond_signal(&thread_inserter);
         pthread_mutex_unlock(&thread_mutex);
+        //execute();
+        //Change state
         state_inserter = OFF;
-        execute();
     }
 }
 
@@ -258,8 +262,9 @@ void *deleter(void* ptr)
         //Unlock mutex for shared resource
         pthread_cond_signal(&thread_deleter);
         pthread_mutex_unlock(&thread_mutex);
+        //execute();
+        //Change State
         state_deleter = OFF;
-        execute();
     }
 }
 
