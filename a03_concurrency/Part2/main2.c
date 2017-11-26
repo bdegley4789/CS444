@@ -31,6 +31,7 @@ Status arrPhilosophers[maxSize];
 char names [maxSize][15] = {"plato", "aristotle","socrates","confucius","epicurus"};
 
 pthread_cond_t thread_plato, thread_aristotle, thread_socrates, thread_confucius, thread_epicurus;
+pthread_cond_t thread_selector, thread_inserter, thread_deleter;
 pthread_mutex_t thread_mutex;
 
 /*
@@ -82,6 +83,25 @@ node* append(node* head, int data)
 }
 
 /*
+    Search for a specific node with input data
+ 
+    return the first matched node that stores the input data,
+    otherwise return NULL
+*/
+node* search(node* head,int data)
+{
+ 
+    node *cursor = head;
+    while(cursor!=NULL)
+    {
+        if(cursor->data == data)
+            return cursor;
+        cursor = cursor->next;
+    }
+    return NULL;
+}
+
+/*
     Display all nodes in the linked list
 */
 void displayAll(node *head)
@@ -120,6 +140,24 @@ node* create_struct(node* theHead) {
 
 // Searchers
 // They merely examine the list; hence thye can execute concurrently w/ each other
+
+void *searchers(void* ptr)
+{
+
+    node * head;
+    head = (node *) ptr;
+    while(1) {
+        // searching the linked list for data
+        printf("Searching...\n");
+        int data = (genrand_int32() % 20) + 1;    
+        node *temp = search(head, data);
+        printf("Searching...\n");
+        if (temp != NULL)
+        {
+            printf("temp value = %d\n", temp->data);
+        }
+    }
+}
 
 // Inserters
 // They add new items to the end of the list; they must be mutually exclusive to preclude 
@@ -255,11 +293,12 @@ void *epicurus(void* ptr)
 int main() {
     //Have seed generate for random sequnce of numbers with genrand
     init_genrand(time(NULL));
+    int data = 10;
 	node *head = NULL;
+
+    // Creates linked list with 5 nodes. 
 	head = create_struct(head);	
     displayAll(head);
-
-    return 0;
 
     // Thread ID.
     pthread_t tidPlato;
@@ -267,6 +306,8 @@ int main() {
     pthread_t tidSocrates;
     pthread_t tidConfucius;
     pthread_t tidEpicurus;
+
+    pthread_t tidSelecter;
     
     //Create mutex so threads can both use shared resource
     if(pthread_mutex_init(&thread_mutex, NULL)) {
@@ -280,6 +321,8 @@ int main() {
     pthread_cond_init(&thread_socrates, NULL);
     pthread_cond_init(&thread_confucius, NULL);
     pthread_cond_init(&thread_epicurus, NULL);
+
+    pthread_cond_init(&thread_selector, NULL);
     
     // Create consumer and producer thread.
     pthread_create(&tidPlato, NULL, plato, NULL);
@@ -293,6 +336,8 @@ int main() {
     pthread_create(&tidEpicurus, NULL, epicurus, NULL);
     printf("Epicurus thread created.\n");
     printf("***************************************\n");
+
+    pthread_create(&tidSelecter, NULL, searchers, (void *) &head);
     
     // When done join threads.
     pthread_join(tidPlato, NULL);
@@ -300,6 +345,8 @@ int main() {
     pthread_join(tidSocrates, NULL);
     pthread_join(tidConfucius, NULL);
     pthread_join(tidEpicurus, NULL);
+
+    pthread_join(tidSelecter, NULL);
     
     //Destroy pthreads so they don't continue after ctrl c
     pthread_mutex_destroy(&thread_mutex);
@@ -308,6 +355,8 @@ int main() {
     pthread_cond_destroy(&thread_socrates);
     pthread_cond_destroy(&thread_confucius);
     pthread_cond_destroy(&thread_epicurus);
+
+    pthread_cond_destroy(&thread_selector);
     printf("Threads are completed.\n");
     
     exit(0);
