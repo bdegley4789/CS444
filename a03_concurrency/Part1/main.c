@@ -65,11 +65,14 @@ void print_results() {
     print_help(resource2, 2);
     print_help(resource3, 3);
 }
-void get_resource(int n, pthread_cond_t phil, char name [15]) {
+void get_resource(int n, pthread_cond_t phil, int name) {
     //Change philospher status
     Status getResource;
     //0 for false since you don't have the fork yet
-    getResource = (Status){.status = name,.count = 1};
+    if (name == 1) {getResource = (Status){.status = "one",.count = 1};}
+    if (name == 2) {getResource = (Status){.status = "two",.count = 1};}
+    if (name == 3) {getResource = (Status){.status = "three",.count = 1};}
+    if (name == 4) {getResource = (Status){.status = "four",.count = 1};}
     pthread_mutex_lock(&thread_mutex);
     //Find an open resource
     if(resource1[0].count == 0 || resource1[1].count == 0 || resource1[2].count == 0) {
@@ -109,25 +112,78 @@ void isEmptied(Status resource[maxSize]) {
     printf("Releasing resource\n");
 }
 //Release status set count to 2. When all counts are 2 fully release resource
-void release_resource(int n, pthread_cond_t phil, char name [15]) {
+void release_resource(int n, pthread_cond_t phil, int name) {
     //Change philospher status
     Status relResource;
     //1 for true since you still have the fork
-    relResource = (Status){.status = "",.count = 2};
+    if (name == 1) {relResource = (Status){.status = "",.count = 2};}
+    if (name == 2) {relResource = (Status){.status = "",.count = 2};}
+    if (name == 3) {relResource = (Status){.status = "",.count = 2};}
+    if (name == 4) {relResource = (Status){.status = "",.count = 2};}
     pthread_mutex_lock(&thread_mutex);
     int i;
-    for (i = 0; i < maxSize; i++) {
-        if (resource1[i].status == name) {
-            resource1[i] = relResource;
-            isEmptied(resource1);
-        } else if (resource2[i].status == name) {
-            resource2[i] = relResource;
-            isEmptied(resource2);
-        } else if (resource3[i].status == name) {
-            resource3[i] = relResource;
-            isEmptied(resource3);
-        } else {
-            printf("Error process not found!\n");
+    if (name == 1) {
+        for (i = 0; i < maxSize; i++) {
+            if (strcmp(resource1[i].status,"one") == 0) {
+                resource1[i] = relResource;
+                isEmptied(resource1);
+            } else if (strcmp(resource2[i].status,"one") == 0) {
+                resource2[i] = relResource;
+                isEmptied(resource2);
+            } else if (strcmp(resource3[i].status,"one") == 0) {
+                resource3[i] = relResource;
+                isEmptied(resource3);
+            } else {
+                printf("Process one not currently active\n");
+            }
+        }
+    }
+    if (name == 2) {
+        for (i = 0; i < maxSize; i++) {
+            if (strcmp(resource1[i].status,"two") == 0) {
+                resource1[i] = relResource;
+                isEmptied(resource1);
+            } else if (strcmp(resource2[i].status,"two") == 0) {
+                resource2[i] = relResource;
+                isEmptied(resource2);
+            } else if (strcmp(resource3[i].status,"two") == 0) {
+                resource3[i] = relResource;
+                isEmptied(resource3);
+            } else {
+                printf("Process two not currently active\n");
+            }
+        }
+    }
+    if (name == 3) {
+        for (i = 0; i < maxSize; i++) {
+            if (strcmp(resource1[i].status,"three") == 0) {
+                resource1[i] = relResource;
+                isEmptied(resource1);
+            } else if (strcmp(resource2[i].status,"three") == 0) {
+                resource2[i] = relResource;
+                isEmptied(resource2);
+            } else if (strcmp(resource3[i].status,"three") == 0) {
+                resource3[i] = relResource;
+                isEmptied(resource3);
+            } else {
+                printf("Process three not currently active\n");
+            }
+        }
+    }
+    if (name == 4) {
+        for (i = 0; i < maxSize; i++) {
+            if (strcmp(resource1[i].status,"four") == 0) {
+                resource1[i] = relResource;
+                isEmptied(resource1);
+            } else if (strcmp(resource2[i].status,"four") == 0) {
+                resource2[i] = relResource;
+                isEmptied(resource2);
+            } else if (strcmp(resource3[i].status,"four") == 0) {
+                resource3[i] = relResource;
+                isEmptied(resource3);
+            } else {
+                printf("Process four not currently active\n");
+            }
         }
     }
     //Print new status
@@ -142,9 +198,9 @@ void *one(void* ptr)
 {
     while(1) {
         find();
-        get_resource(0,thread_one,names[1]);
+        get_resource(0,thread_one,1);
         use();
-        release_resource(0,thread_one,names[1]);
+        release_resource(0,thread_one,1);
     }
 }
 //Create second process
@@ -152,9 +208,9 @@ void *two(void* ptr)
 {
     while(1) {
         find();
-        get_resource(1,thread_two,names[2]);
+        get_resource(1,thread_two,2);
         use();
-        release_resource(1,thread_two,names[2]);
+        release_resource(1,thread_two,2);
     }
 }
 //Create third process
@@ -162,9 +218,9 @@ void *three(void* ptr)
 {
     while(1) {
         find();
-        get_resource(2,thread_three,names[3]);
+        get_resource(2,thread_three,3);
         use();
-        release_resource(2,thread_three,names[3]);
+        release_resource(2,thread_three,3);
     }
 }
 //Create fourth process
@@ -172,9 +228,9 @@ void *four(void* ptr)
 {
     while(1) {
         find();
-        get_resource(3,thread_four,names[4]);
+        get_resource(3,thread_four,4);
         use();
-        release_resource(3,thread_four,names[4]);
+        release_resource(3,thread_four,4);
     }
 }
 void initResource(){
