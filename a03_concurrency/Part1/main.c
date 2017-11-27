@@ -107,9 +107,36 @@ void get_resource(int n, pthread_cond_t phil, int name) {
     print_results();
     pthread_mutex_unlock(&thread_mutex);
 }
-void isEmptied(Status resource[maxSize]) {
+void isEmptied(int n,char num[15]) {
     //Write code
-    printf("Releasing resource\n");
+    Status tempResource;
+    printf("Releasing resource %s\n",num);
+    if (n == 1) {
+        if (resource1[0].count == 2 && resource1[1].count == 2 && resource1[2].count == 2) {
+            tempResource = (Status){.status = "",.count = 0};
+            resource1[0] = tempResource;
+            resource1[1] = tempResource;
+            resource1[2] = tempResource;
+        }
+    }
+    if (n == 2) {
+        if (resource2[0].count == 2 && resource2[1].count == 2 && resource2[2].count == 2) {
+            tempResource = (Status){.status = "",.count = 0};
+            resource2[0] = tempResource;
+            resource2[1] = tempResource;
+            resource2[2] = tempResource;
+        }
+    }
+    if (n == 3) {
+        if (resource3[0].count == 2 && resource3[1].count == 2 && resource3[2].count == 2) {
+            tempResource = (Status){.status = "",.count = 0};
+            resource3[0] = tempResource;
+            resource3[1] = tempResource;
+            resource3[2] = tempResource;
+        }
+    }
+    printf("Resource %s has been freed\n",num);
+    
 }
 //Release status set count to 2. When all counts are 2 fully release resource
 void release_resource(int n, pthread_cond_t phil, int name) {
@@ -126,13 +153,13 @@ void release_resource(int n, pthread_cond_t phil, int name) {
         for (i = 0; i < maxSize; i++) {
             if (strcmp(resource1[i].status,"one") == 0) {
                 resource1[i] = relResource;
-                isEmptied(resource1);
+                isEmptied(1,"one");
             } else if (strcmp(resource2[i].status,"one") == 0) {
                 resource2[i] = relResource;
-                isEmptied(resource2);
+                isEmptied(2,"two");
             } else if (strcmp(resource3[i].status,"one") == 0) {
                 resource3[i] = relResource;
-                isEmptied(resource3);
+                isEmptied(3,"three");
             } else {
                 printf("Process one not currently active\n");
             }
@@ -142,13 +169,13 @@ void release_resource(int n, pthread_cond_t phil, int name) {
         for (i = 0; i < maxSize; i++) {
             if (strcmp(resource1[i].status,"two") == 0) {
                 resource1[i] = relResource;
-                isEmptied(resource1);
+                isEmptied(1,"one");
             } else if (strcmp(resource2[i].status,"two") == 0) {
                 resource2[i] = relResource;
-                isEmptied(resource2);
+                isEmptied(2,"two");
             } else if (strcmp(resource3[i].status,"two") == 0) {
                 resource3[i] = relResource;
-                isEmptied(resource3);
+                isEmptied(3,"three");
             } else {
                 printf("Process two not currently active\n");
             }
@@ -158,13 +185,13 @@ void release_resource(int n, pthread_cond_t phil, int name) {
         for (i = 0; i < maxSize; i++) {
             if (strcmp(resource1[i].status,"three") == 0) {
                 resource1[i] = relResource;
-                isEmptied(resource1);
+                isEmptied(1,"one");
             } else if (strcmp(resource2[i].status,"three") == 0) {
                 resource2[i] = relResource;
-                isEmptied(resource2);
+                isEmptied(2,"two");
             } else if (strcmp(resource3[i].status,"three") == 0) {
                 resource3[i] = relResource;
-                isEmptied(resource3);
+                isEmptied(3,"three");
             } else {
                 printf("Process three not currently active\n");
             }
@@ -174,13 +201,13 @@ void release_resource(int n, pthread_cond_t phil, int name) {
         for (i = 0; i < maxSize; i++) {
             if (strcmp(resource1[i].status,"four") == 0) {
                 resource1[i] = relResource;
-                isEmptied(resource1);
+                isEmptied(1,"one");
             } else if (strcmp(resource2[i].status,"four") == 0) {
                 resource2[i] = relResource;
-                isEmptied(resource2);
+                isEmptied(2,"two");
             } else if (strcmp(resource3[i].status,"four") == 0) {
                 resource3[i] = relResource;
-                isEmptied(resource3);
+                isEmptied(3,"three");
             } else {
                 printf("Process four not currently active\n");
             }
