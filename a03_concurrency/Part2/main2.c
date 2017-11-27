@@ -24,18 +24,13 @@ typedef struct node {
 } node;
 int count;
 node *head;
+//State of deleter and inserter threads for mutually exclusive
 status_t state_deleter = OFF;
 status_t state_inserter = OFF;
 
 pthread_cond_t thread_searcher, thread_inserter, thread_deleter;
 pthread_mutex_t thread_mutex;
 
-/*void think() {
-    //Think for 1-5 seconds
-    unsigned int think_sleep = (genrand_int32() % 4) + 1;
-    while(think_sleep)
-        think_sleep = sleep(think_sleep);
-}*/
 void execute() {
     //Eat for 1-5 seconds
     unsigned int eat_sleep = (genrand_int32() % 4) + 1;
@@ -149,11 +144,13 @@ void append2(int data)
     node* new_node =  create(data,NULL);
     cursor->next = new_node;
 }
+//Searcher generate random number and finds data at that spot
 int search() {
     execute();
     unsigned int searchPos = genrand_int32() % count;
     return find(searchPos);
 }
+//Inserter generates random data and inserts it at end of list
 int insert_item() {
     //Random data 0-99999
     execute();
@@ -162,6 +159,7 @@ int insert_item() {
     append2(data);
     return data;
 }
+//Deleter deletes data from random position
 int delete_item() {
     //Position to delete
     execute();
@@ -174,37 +172,16 @@ int delete_item() {
     count--;
     return data;
 }
-// Searchers
-// They merely examine the list; hence thye can execute concurrently w/ each other
-
-/*void *searchers(void* ptr)
- {
- 
- node * head;
- head = (node *) ptr;
- while(1) {
- // searching the linked list for data
- printf("Searching...\n");
- int data = (genrand_int32() % 20) + 1;
- node *temp = search(head, data);
- printf("Searching...\n");
- if (temp != NULL)
- {
- printf("temp value = %d\n", temp->data);
- }
- }
- }*/
-
 
 // Searcher
 // They merely examine the list; hence thye can execute concurrently w/ each other
-
 void *searcher(void* ptr)
 {
     while(1) {
-        /*while(state_deleter == ON) {
-            printf("Waiting for deleter to finish");
-        }*/
+        //Searcher waits until deleter is finished
+        while(state_deleter == ON) {
+            int waiting = 0;
+        }
         //think();
         //pthread_mutex_lock(&thread_mutex);
         printf("Searcher...\n");
@@ -226,17 +203,19 @@ void *searcher(void* ptr)
 void *inserter(void* ptr)
 {
     while(1) {
-        /*while(state_deleter == ON) {
-            printf("Waiting for deleter to finish");
+        //inserter waits until deleter finished
+        while(state_deleter == ON) {
+            int waiting = 0;
         }
+        //inserter waits until other inserter is finished
         while(state_inserter == ON) {
-            printf("Waiting for inserter to finish");
-        }*/
+            int waiting = 0;
+        }
         //think();
         printf("Inserter...\n");
         state_inserter = ON;
         pthread_mutex_lock(&thread_mutex);
-        printf("Item %d inserted. Count %d\n",insert_item(),count);
+        printf("Item %d inserted.\n",insert_item());
         count++;
         pthread_cond_signal(&thread_inserter);
         pthread_mutex_unlock(&thread_mutex);
@@ -253,12 +232,14 @@ void *inserter(void* ptr)
 void *deleter(void* ptr)
 {
     while(1) {
-        /*while(state_deleter == ON) {
-            printf("Waiting for deleter to finish");
+        //deleter waits until other deleter is finished
+        while(state_deleter == ON) {
+            int waiting = 0;
         }
+        //deleter waits until other deleter is finished
         while(state_inserter == ON) {
-            printf("Waiting for inserter to finish");
-        }*/
+            int waiting = 0;
+        }
         //think();
         printf("Deleter...\n");
         sleep(4);
