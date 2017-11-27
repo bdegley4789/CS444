@@ -72,6 +72,16 @@
 % can change the word "proof" in the \begin and \end
 % commands with "solution".
 % -----------------------------------------------------
+\section*{Design Plan}
+For part 1 on this assignment we created four processes and three resources. The resources would get filled up by three processes and
+then no new process could join until all three processes had left. We accomplished this by starting the count at 0 then setting the count to
+1 every time a process was added. Once a process was removed we set the count to 2. Once all the counts in the resource array were 2 meaning
+all the threads had left we reset the resource back to all counts at 0. And let new processes join/consume the resource.
+\newline
+For part 2 on this assignment we created three types of threads inserters, deleters and searchers. Searchers just search for a random item
+in the linked list and returned it. Inserters would insert an item to the end of the list. Deleters would delete an item from a random spot.
+We used states by turning them ON or OFF when the inserters and deleters were running to make our program be mutually exclusive. We used
+linked list functions from one source to do the linked list method of appending to a linked list and initializing a linked list.
 
 \section*{Questions}
 
@@ -89,7 +99,7 @@ I think that the main point of this assignment was honed our parallel-thinking s
 \begin{question}{2}
 How did you personally approach the problem? Design decisions, algorithm, etc.
 \end{question}
-How we approached the problem for this concurrency assignment was using problem-solving techniques. First, we needed to understand the problem. We identified, for part two, that we needed to have three different functions that would act as a selector, inserter, and deleter, respectively. In addition, we understood that the single linked list would be the source of information so a basic structure needed to be implemented and initialized. For the second step, we designed the three main threads that would be involved in this assignment. The threads needed to be cohesive so when a thread would be called upon, it would do its objective. Further, we then implemented our design.
+How we approached the problem for this concurrency assignment was using problem-solving techniques. First, we needed to understand the problem. We identified, for part two, that we needed to have three different functions that would act as a selector, inserter, and deleter, respectively. In addition, we understood that the single linked list would be the source of information so a basic structure needed to be implemented and initialized. For the second step, we designed the three main threads that would be involved in this assignment. The threads needed to be cohesive so when a thread would be called upon, it would do its objective. Further, we then implemented our design. For part 1 and part 2 the design plan we also described in the design plan.
 
 % -----------------------------------------------------
 % Third problem
@@ -100,7 +110,7 @@ How we approached the problem for this concurrency assignment was using problem-
 \begin{question}{3}
 How did you ensure your solution was correct? Testing details, for instance.
 \end{question}
-The way we ensured that our solution was correct was by checking that each thread worked properly. For example, the selector thread printed out a random node from the single linked list; the inserter thread inserted created a node and inserted it at the end of the single linked list. However, the deleter thread was created to randomly delete a node from the single linked list; but, for some reason, it would crash after a few minutes of execution. However, this problem was fixed by delaying the deleter thread for a few seconds more than the speed of insertion of the inserter. As a result, there was always a single linked list. Then after running the program once more, every thread reported itself--by the printf function, this allowed us to identify that each of the threads was executing.
+The way we ensured that our solution was correct was by checking that each thread worked properly. For example, the selector thread printed out a random node from the single linked list; the inserter thread inserted created a node and inserted it at the end of the single linked list. However, the deleter thread was created to randomly delete a node from the single linked list; but, for some reason, it would crash after a few minutes of execution. However, this problem was fixed by delaying the deleter thread for a few seconds more than the speed of insertion of the inserter. As a result, there was always a single linked list. Then after running the program once more, every thread reported itself--by the printf function, this allowed us to identify that each of the threads was executing. For part 1 we rand the code and made sure the resources were getting freed up as three threads left. 
 
 \newpage
 
@@ -156,7 +166,7 @@ caf8ec4 Created 2nd repo
 November 19, 2017: (2 hours) Started Part 1 created 4 processes and 3 resources for the problem. Brainstormed on how to complete concurrency problem.
 November 24, 2017: (5 hours) Start Part 2 created find function and inserter function. Include linked list functions for appending to init a linked list for part two. Created release method for removing process from a resource.
 November 25, 2017: (6 hours) Finished adding linked list functions. Got part 2 of concurrency homework running. But only one thread could run a t a time
-November 26, 2017: (6 hours) Fixed bugs in problem 1 with string pointer comparison in C. Created function to release resource once three threads had left. Fixed bug in part 2 so multiple threads could run with mutual exclusion. 
+November 26, 2017: (6 hours) Fixed bugs in problem 1 with string pointer comparison in C. Created function to release resource once three threads had left. Fixed bug in part 2 so multiple threads could run with mutual exclusion.
 % -----------------------------------------------
 % Ignore everything that appears below this.
 % -----------------------------------------------
