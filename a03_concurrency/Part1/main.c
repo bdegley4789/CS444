@@ -44,6 +44,7 @@ void use() {
     while(use_sleep)
         use_sleep = sleep(use_sleep);
 }
+//This will print out all the threads consuming a resource
 void print_help(Status resource[maxSize], int num) {
     int i;
     int empty = 0;
@@ -65,16 +66,18 @@ void print_results() {
     print_help(resource2, 2);
     print_help(resource3, 3);
 }
+//In this method threads choose an open resource based on a count of 0
+//Once they choose a resource they change the count of that spot to 1
 void get_resource(int n, pthread_cond_t phil, int name) {
     //Change philospher status
     Status getResource;
-    //0 for false since you don't have the fork yet
+    //Set the new resource to the name number and count to 1
     if (name == 1) {getResource = (Status){.status = "one",.count = 1};}
     if (name == 2) {getResource = (Status){.status = "two",.count = 1};}
     if (name == 3) {getResource = (Status){.status = "three",.count = 1};}
     if (name == 4) {getResource = (Status){.status = "four",.count = 1};}
     pthread_mutex_lock(&thread_mutex);
-    //Find an open resource
+    //Find an open resource then insert new thread
     if(resource1[0].count == 0 || resource1[1].count == 0 || resource1[2].count == 0) {
         if (resource1[0].count == 0) {
             resource1[0] = getResource;
@@ -100,18 +103,21 @@ void get_resource(int n, pthread_cond_t phil, int name) {
             resource3[2] = getResource;
         }
     } else {
-        //This code should never occur
         printf("Error all resources full!\n");
     }
-    //Print new status
+    //Print new status after thread is inserted into one of the three resources
     print_results();
     pthread_mutex_unlock(&thread_mutex);
 }
+//This code checks if all three threads have left a resource
+//If all three threads have left then it free's the resource so other threads
+//can begin using it.
 void isEmptied(int n,char num[15]) {
     //Write code
     Status tempResource;
     printf("Releasing resource %s\n",num);
     if (n == 1) {
+        //Check if all counts are 2. This means all threads have left
         if (resource1[0].count == 2 && resource1[1].count == 2 && resource1[2].count == 2) {
             tempResource = (Status){.status = "",.count = 0};
             resource1[0] = tempResource;
@@ -142,15 +148,17 @@ void isEmptied(int n,char num[15]) {
 void release_resource(int n, pthread_cond_t phil, int name) {
     //Change philospher status
     Status relResource;
-    //1 for true since you still have the fork
+    //Set status to "" and put count to 2
     if (name == 1) {relResource = (Status){.status = "",.count = 2};}
     if (name == 2) {relResource = (Status){.status = "",.count = 2};}
     if (name == 3) {relResource = (Status){.status = "",.count = 2};}
     if (name == 4) {relResource = (Status){.status = "",.count = 2};}
     pthread_mutex_lock(&thread_mutex);
     int i;
+    //Find threads in the three resources and then remove it
     if (name == 1) {
         for (i = 0; i < maxSize; i++) {
+            //Use strcmp for C pointer string
             if (strcmp(resource1[i].status,"one") == 0) {
                 resource1[i] = relResource;
                 isEmptied(1,"one");
