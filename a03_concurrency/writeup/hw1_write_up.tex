@@ -78,7 +78,7 @@
 \begin{question}{1}
 What do you think the main point of this assignment is?
 \end{question}
-I think that the main point of this assignment was honed our parallel-thinking skills. The ability to think of a thread while keeping in mind other threads is complex. The reason why programming multiple threads are complex is that you have to think about how the various threads will interact with each other. In the case of this assignment, there were three threads that were accessing one single linked list. So, the main point of this assignment was to become familiar and appreciate the interactions of multiple threads selecting, inserting, and deleting data. In addition, the other main point of this assignment was to hone our interpersonal skills. Working with a partner throughout this assignment has allowed us to understand and appreciate the roles of a leader and a follower. Also, we were able to criticize each other's code without offending one another. 
+I think that the main point of this assignment was honed our parallel-thinking skills. The ability to think of a thread while keeping in mind other threads is complex. The reason why programming multiple threads are complex is that you have to think about how the various threads will interact with each other. In the case of this assignment, there were three threads that were accessing one single linked list. So, the main point of this assignment was to become familiar and appreciate the interactions of multiple threads selecting, inserting, and deleting data. In addition, the other main point of this assignment was to hone our interpersonal skills. Working with a partner throughout this assignment has allowed us to understand and appreciate the roles of a leader and a follower. Also, we were able to criticize each other's code without offending one another.
 
 % -----------------------------------------------------
 % Second problem
@@ -89,7 +89,7 @@ I think that the main point of this assignment was honed our parallel-thinking s
 \begin{question}{2}
 How did you personally approach the problem? Design decisions, algorithm, etc.
 \end{question}
-How we approached the problem for this concurrency assignment was using problem-solving techniques. First, we needed to understand the problem. We identified, for part two, that we needed to have three different functions that would act as a selector, inserter, and deleter, respectively. In addition, we understood that the single linked list would be the source of information so a basic structure needed to be implemented and initialized. For the second step, we designed the three main threads that would be involved in this assignment. The threads needed to be cohesive so when a thread would be called upon, it would do its objective. Further, we then implemented our design.  
+How we approached the problem for this concurrency assignment was using problem-solving techniques. First, we needed to understand the problem. We identified, for part two, that we needed to have three different functions that would act as a selector, inserter, and deleter, respectively. In addition, we understood that the single linked list would be the source of information so a basic structure needed to be implemented and initialized. For the second step, we designed the three main threads that would be involved in this assignment. The threads needed to be cohesive so when a thread would be called upon, it would do its objective. Further, we then implemented our design.
 
 % -----------------------------------------------------
 % Third problem
@@ -100,7 +100,7 @@ How we approached the problem for this concurrency assignment was using problem-
 \begin{question}{3}
 How did you ensure your solution was correct? Testing details, for instance.
 \end{question}
-The way we ensured that our solution was correct was by checking that each thread worked properly. For example, the selector thread printed out a random node from the single linked list; the inserter thread inserted created a node and inserted it at the end of the single linked list. However, the deleter thread was created to randomly delete a node from the single linked list; but, for some reason, it would crash after a few minutes of execution. However, this problem was fixed by delaying the deleter thread for a few seconds more than the speed of insertion of the inserter. As a result, there was always a single linked list. Then after running the program once more, every thread reported itself--by the printf function, this allowed us to identify that each of the threads was executing. 
+The way we ensured that our solution was correct was by checking that each thread worked properly. For example, the selector thread printed out a random node from the single linked list; the inserter thread inserted created a node and inserted it at the end of the single linked list. However, the deleter thread was created to randomly delete a node from the single linked list; but, for some reason, it would crash after a few minutes of execution. However, this problem was fixed by delaying the deleter thread for a few seconds more than the speed of insertion of the inserter. As a result, there was always a single linked list. Then after running the program once more, every thread reported itself--by the printf function, this allowed us to identify that each of the threads was executing.
 
 \newpage
 
@@ -112,7 +112,7 @@ The way we ensured that our solution was correct was by checking that each threa
 \begin{question}{4}
 What did you learn?
 \end{question}
-What we learned from this assignment were many ideas. First, there is a large amount of useful information on the web. Sometimes, you need to search many sources in order to come to a conclusion about what is the best approach to design or implement a function. In addition, it helps tremendously to pull out a sheet of paper and scribble around to pull out a solution. This saved us a large amount of time. Further, it also helps to take a walk and not think about the problem. Sometimes you need some fresh air; and maybe as a result, you end up finding a valid solution. 
+What we learned from this assignment were many ideas. First, there is a large amount of useful information on the web. Sometimes, you need to search many sources in order to come to a conclusion about what is the best approach to design or implement a function. In addition, it helps tremendously to pull out a sheet of paper and scribble around to pull out a solution. This saved us a large amount of time. Further, it also helps to take a walk and not think about the problem. Sometimes you need some fresh air; and maybe as a result, you end up finding a valid solution.
 
 % ---------------------------------------------------------
 % Version Control Log
@@ -122,6 +122,29 @@ What we learned from this assignment were many ideas. First, there is a large am
 \newline
 \begin{center}
 \begin{tabular}{ c c }
+f21300c Added mutual exclusion
+7934998 Added comments
+ac0a695 Created free resource
+bcc0fc2 created writeup report
+b137a4f Fixed string compare
+9eca4c1 Fixed print part1
+41635af fixed the bug in deleter
+68d326f working on the deleter fucntion
+d583752 Fixed insert
+c1ca5bb Fixed insert wait error
+8a9a484 Fixed wait error
+1c248a8 Fixed insert method
+9a88af3 Created inserters and deleters
+8b0650f working on passing the head variable to selector
+b6ad639 added documentation
+3bb6eef finished the create_struct function
+fbb9d8d creating function that init 5 elements into a link list
+3331db2 created create and append func
+a506a90 edited makefile
+9033f0f added doc
+30b2338 Fixed compile error with struct array
+e00ba5e Fixed compile error with resource
+caf8ec4 Created 2nd repo
 
 \end{tabular}
 \end{center}
@@ -130,8 +153,10 @@ What we learned from this assignment were many ideas. First, there is a large am
 % Work Log
 %----------------------------------------------------------
 \section*{Work Log}
-
-
+November 19, 2017: (2 hours) Started Part 1 created 4 processes and 3 resources for the problem. Brainstormed on how to complete concurrency problem.
+November 24, 2017: (5 hours) Start Part 2 created find function and inserter function. Include linked list functions for appending to init a linked list for part two. Created release method for removing process from a resource.
+November 25, 2017: (6 hours) Finished adding linked list functions. Got part 2 of concurrency homework running. But only one thread could run a t a time
+November 26, 2017: (6 hours) Fixed bugs in problem 1 with string pointer comparison in C. Created function to release resource once three threads had left. Fixed bug in part 2 so multiple threads could run with mutual exclusion. 
 % -----------------------------------------------
 % Ignore everything that appears below this.
 % -----------------------------------------------
