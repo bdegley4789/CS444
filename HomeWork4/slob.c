@@ -302,14 +302,24 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
 		b = slob_page_alloc(sp, size, align);
 		if (!b)
 			continue;
-
+        
+        free_amount = 0;
+        struct list_head *free_slob_size;
+        free_slob_size = &free_slob_small;
+        list_for_each_entry(sp, free_slob_size, list) {
+            free_amount += sp->units;
+        }
+        free_slob_size = &free_slob_medium;
+        list_for_each_entry(sp, free_slob_size, list) {
+            free_amount += sp->units;
+        }
+        free_slob_size = &free_slob_large
+        list_for_each_entry(sp, free_slob_size, list) {
+            free_amount += sp->units;
+        }
 		/* Improve fragment distribution and reduce our average
 		 * search time by starting our next search here. (see
 		 * Knuth vol 1, sec 2.5, pg 449) */
-		if (prev != slob_list->prev &&
-				slob_list->next != prev->next)
-			list_move_tail(slob_list, prev->next);
-		break;
 	}
 	spin_unlock_irqrestore(&slob_lock, flags);
 
