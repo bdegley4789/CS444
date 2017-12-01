@@ -1,0 +1,1 @@
+SLOB traditionally uses a first-fit algorithm, which uses the first avaiable space for memory. We need to implement a best-fit algorithm. As a result this will optimize performance.
