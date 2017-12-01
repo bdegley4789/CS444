@@ -1,0 +1,157 @@
+--- slob_old.c	2017-09-26 20:07:21.000000000 -0700
++++ slob.c	2017-11-30 20:25:32.000000000 -0800
+@@ -212,59 +212,9 @@
+ }
+ 
+ /*
+- * Allocate a slob block within a given slob_page sp.
+- */
+-static void *slob_page_alloc(struct page *sp, size_t size, int align)
+-{
+-	slob_t *prev, *cur, *aligned = NULL;
+-	int delta = 0, units = SLOB_UNITS(size);
+-
+-	for (prev = NULL, cur = sp->freelist; ; prev = cur, cur = slob_next(cur)) {
+-		slobidx_t avail = slob_units(cur);
+-
+-		if (align) {
+-			aligned = (slob_t *)ALIGN((unsigned long)cur, align);
+-			delta = aligned - cur;
+-		}
+-		if (avail >= units + delta) { /* room enough? */
+-			slob_t *next;
+-
+-			if (delta) { /* need to fragment head to align? */
+-				next = slob_next(cur);
+-				set_slob(aligned, avail - delta, next);
+-				set_slob(cur, delta, aligned);
+-				prev = cur;
+-				cur = aligned;
+-				avail = slob_units(cur);
+-			}
+-
+-			next = slob_next(cur);
+-			if (avail == units) { /* exact fit? unlink. */
+-				if (prev)
+-					set_slob(prev, slob_units(prev), next);
+-				else
+-					sp->freelist = next;
+-			} else { /* fragment */
+-				if (prev)
+-					set_slob(prev, slob_units(prev), cur + units);
+-				else
+-					sp->freelist = cur + units;
+-				set_slob(cur + units, avail - units, next);
+-			}
+-
+-			sp->units -= units;
+-			if (!sp->units)
+-				clear_slob_page_free(sp);
+-			return cur;
+-		}
+-		if (slob_last(cur))
+-			return NULL;
+-	}
+-}
+-
+-/*
+  * slob_alloc: entry point into the slob allocator.
+  */
++//TODO Bryce
+ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ {
+ 	struct page *sp;
+@@ -300,14 +250,24 @@
+ 		b = slob_page_alloc(sp, size, align);
+ 		if (!b)
+ 			continue;
+-
++        
++        free_amount = 0;
++        struct list_head *free_slob_size;
++        free_slob_size = &free_slob_small;
++        list_for_each_entry(sp, free_slob_size, list) {
++            free_amount += sp->units;
++        }
++        free_slob_size = &free_slob_medium;
++        list_for_each_entry(sp, free_slob_size, list) {
++            free_amount += sp->units;
++        }
++        free_slob_size = &free_slob_large
++        list_for_each_entry(sp, free_slob_size, list) {
++            free_amount += sp->units;
++        }
+ 		/* Improve fragment distribution and reduce our average
+ 		 * search time by starting our next search here. (see
+ 		 * Knuth vol 1, sec 2.5, pg 449) */
+-		if (prev != slob_list->prev &&
+-				slob_list->next != prev->next)
+-			list_move_tail(slob_list, prev->next);
+-		break;
+ 	}
+ 	spin_unlock_irqrestore(&slob_lock, flags);
+ 
+@@ -333,6 +293,63 @@
+ 		memset(b, 0, size);
+ 	return b;
+ }
++/*
++ * Allocate a slob block within a given slob_page sp.
++ */
++static void *slob_page_alloc(struct page *sp, size_t size, int align)
++{
++    slob_t *prev, *cur, *aligned = NULL;
++    int delta = 0, units = SLOB_UNITS(size);
++    
++    slot_t *best_curr = NULL, *best_prev = NULL, *best_next =NULL;
++    int best_delta_size = SLOB_UNITS(size);
++    
++    
++    printk("Function slob_page_alloc activated\n");
++    for (prev = NULL, cur = sp->freelist; ; prev = cur, cur = slob_next(cur)) {
++        slobidx_t avail = slob_units(cur);
++        
++        if (align) {
++            aligned = (slob_t *)ALIGN((unsigned long)cur, align);
++            delta = aligned - cur;
++        }
++        // Need to change to best-fit?
++        if (avail >= units + delta) { /* room enough? */
++            slob_t *next;
++            
++            if (best_delta_size) { /* need to fragment head to align? */
++                next = slob_next(cur);
++                set_slob(aligned, avail - delta, next);
++                set_slob(cur, delta, aligned);
++                prev = cur;
++                cur = aligned;
++                avail = slob_units(cur);
++            }
++            
++            next = slob_next(cur);
++            if (avail == units) { /* exact fit? unlink. */
++                if (prev)
++                    set_slob(prev, slob_units(prev), next);
++                else
++                    sp->freelist = next;
++            } else { /* fragment */
++                if (prev)
++                    set_slob(prev, slob_units(prev), cur + units);
++                else
++                    sp->freelist = cur + units;
++                set_slob(cur + units, avail - units, next);
++            }
++            
++            sp->units -= units;
++            if (!sp->units)
++                clear_slob_page_free(sp);
++            return cur;
++        }
++        if (slob_last(cur))
++            return NULL;
++    }
++    printk("Function slob_page_alloc ended\n");
++}
+ 
+ /*
+  * slob_free: entry point into the slob allocator.
