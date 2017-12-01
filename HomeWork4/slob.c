@@ -220,6 +220,11 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
 	slob_t *prev, *cur, *aligned = NULL;
 	int delta = 0, units = SLOB_UNITS(size);
 
+	slot_t *best_curr = NULL, *best_prev = NULL, *best_next =NULL;
+	int best_delta_size = SLOB_UNITS(size);
+
+
+	printk("Function slob_page_alloc activated\n");
 	for (prev = NULL, cur = sp->freelist; ; prev = cur, cur = slob_next(cur)) {
 		slobidx_t avail = slob_units(cur);
 
@@ -227,10 +232,11 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
 			aligned = (slob_t *)ALIGN((unsigned long)cur, align);
 			delta = aligned - cur;
 		}
+		// Need to change to best-fit?
 		if (avail >= units + delta) { /* room enough? */
 			slob_t *next;
 
-			if (delta) { /* need to fragment head to align? */
+			if (best_delta_size) { /* need to fragment head to align? */
 				next = slob_next(cur);
 				set_slob(aligned, avail - delta, next);
 				set_slob(cur, delta, aligned);
@@ -261,6 +267,7 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
 		if (slob_last(cur))
 			return NULL;
 	}
+	printk("Function slob_page_alloc ended\n");
 }
 
 /*
