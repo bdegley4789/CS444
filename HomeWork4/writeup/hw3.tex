@@ -195,21 +195,14 @@ the kernel, then, executed without a problem.
 \newline
 \begin{center}
 \begin{tabular}{ c c }
-* 142dda6 Finished print encrypted/decrypted method \\
-* 5884bfe Finished SBDTransfer method \\
-* a122506 fix bracket error
-* 2561116 Created Crypto \\
-* 35ab1e2 worked on sbd.c transfer fucn \\
-* 5f5a59d testing 2 \\
-* 1c75c6b WriteUp makefile \\
-* 687c45a deleted the wrong file \\
-* 7daee1b named files \\
-* bde4cae Update hw3.tex \\
-* 3b08d4c added cipher file  \\
-* 27d0273 created hw3 \\
-* ee63246 deleted fiels \\
-* c22e048 created files \\
-* 7b9929a added driver file
+* 1704d0d Created Kernel Patch
+* 9ecbd1c Fixed bad patch
+* 1eef7c4 Design doc
+* cd6c5bc Kernel Patch
+* ecd8b9d fixed slob_alloc_page
+* d100359 slob_alloc
+* 9835285 Add slop.c
+* e82b0d7 created design doc
 \end{tabular}
 \end{center}
 
@@ -217,15 +210,9 @@ the kernel, then, executed without a problem.
 % Work Log
 %----------------------------------------------------------
 \section*{Work Log}
-November 11, 2017: (2 hours) Planning and reading assignment and files in https://lwn.net/Kernel/LDD3/
-to understand what we will need to complete. \\
-November 11, 2017: (3 hours) Implementation of the crypto and sbd transfer method
-until we get encryption and decryption working. \\
-November 11, 2017: (1 hours) Testing the sbd.c file and encryption and decryption in
-the linux kernel. \\
-November 12, 2017: (2 hours) Documentation work and fixing some minor errors in
-sbd.c code. \\
-November 15, 2017: (1 hour) Finished writeup and checked compile on OS2
+November 29, 2017: (3 hours) Planning out how we would implement the best fit algorithm in the slob.c file, which had first fit algorithm at the time. Deciding which functions in slob.c we would need to make changes to, to get it to run the best algorithm.  \\
+November 29, 2017: (2 hours) Implementation of the best fit algorithm in the slob.c. Editing the code and fixing merge errors we had when combining our code through git. \\
+December 1, 2017: (3 hours) Testing the slob.c file on linux yocto kernel completing the write up for the homework.
 % -----------------------------------------------
 % Ignore everything that appears below this.
 % -----------------------------------------------
