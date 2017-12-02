@@ -1,14 +1,14 @@
-TARGET=hw3
+TARGET=hw4
 HTML=main_html
-SRC={hw3}
+SRC={hw4}
 
 default: all 
 
 all:
-	latex hw3.tex
-	dvips -R -Poutline -t letter hw3.dvi -o hw3.ps
-	ps2pdf hw3.ps
-	rm hw3.aux
-	rm hw3.dvi
-	rm hw3.log
-	rm hw3.ps
+	latex hw4.tex
+	dvips -R -Poutline -t letter hw4.dvi -o hw4.ps
+	ps2pdf hw4.ps
+	rm hw4.aux
+	rm hw4.dvi
+	rm hw4.log
+	rm hw4.ps
