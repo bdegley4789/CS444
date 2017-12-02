@@ -1,5 +1,5 @@
 % ===============================================
-% CS444: HW3 Memory Block         Fall 2017
+% CS444: HW4 The SLOB SLAB         Fall 2017
 % Names: Bryce Egley and Bruce Garcia
 % Template for revised homework submission
 % ===============================================
@@ -94,18 +94,8 @@ display in the kernel print.
 \begin{question}{1}
 What do you think the main point of this assignment is?
 \end{question}
-I think that the main point of this assignment was to learn about the Linux
-block drivers. And the best way to learn about block drivers is to actually
-build one. However, we did not build one from scratch; there was a template
-provided for us from the textbook. In addition, we also learned the struggle of
-reading unfamiliar code. And that the driver reads and writes in blocks; it
-reads each segment of the disk. Also since we didn't know the behavior of each
-function, we had to research what the functions were achieving. My partner and
-I divided the work so what we could understand the block driver. Further,
-working with a partner in the assignment helped us keep each other accountable;
-there was no room for procrastination. We also got experience using version
-control. We needed to delegate our work so that we both work not working on the
-same thing and thus, avoid wasting our time.
+I think that the main point of this assignment was to learn about the two out of the three Linux memory allocators: SLOB, SLAB, and SLUB(not used in this assignment). This assignment had a focus on the memory management--one of the vital components of an operating system. In addition, one of the reasons why I think this assignment was given to cs students is because they need to become familiar with code written by other programmers. It was hard to understand what the functions are actually doing because there is little documentation. In addition, another point of the assignment was to hone our skill to delegate the work among ourselves. Further, the ability to work with a partner is an essential role in the software development world. Thus, this assignment aimed to increase our team player skills. 
+
 
 
 
@@ -119,20 +109,7 @@ same thing and thus, avoid wasting our time.
 \begin{question}{2}
 How did you personally approach the problem? Design decisions, algorithm, etc.
 \end{question}
-First, we identified the problem. Which was that we needed to create a block
-driver. Since we didn’t know much about the block driver, we started to read
-the Block I/O Layer chapter from the textbook. In addition, the link that
-proved to be useful was the website the textbook referenced. It had a simple
-block driver implemented. After we analyzed the code from the c file, we
-modified the transfer function because this was the function that handled the
-I/O. We knew that we had to encrypt and decrypt the data, so we analyzed the
-code to see where the encryption and decryption process should take place.
-Further, we researched for a function what would be able to encrypt a block of
-memory. We found the functions that were needed for the encryption and
-decryption of the block. After the encryption and decryption were solved, we
-decided to run the kernel. However, we ran into a problem; the command qemu etc
-was not working. But we managed to solve the error by deleting the forward
-slashed that was implemented on the command line.
+First, like solving any time a problem, we identified the problem. We understood that we needed to first understand the two memory allocators and their implementation. We discovered that the SLOB allocator uses a first-fit algorithm which finds the the first memory space available--a greedy type of algorithm. In addition, we discovered the allocator SLUB uses a best-fit algorithm. That is, the allocators focus is to efficiently allocate memory without hurting performance. After the problem was identified, we decided to create a design document. This document describes which functions needed to be modified; the allocator needs to transform using a first-fit to a best-fit algorithm.  
 
 
 
@@ -145,10 +122,7 @@ slashed that was implemented on the command line.
 \begin{question}{3}
 How did you ensure your solution was correct? Testing details, for instance.
 \end{question}
-The way we ensured that our solution was correct was by running the kernel with
-the block driver, that we created, in the driver/block directory. We did not
-encounter any bug error, so this was a good sign that everything was going
-well. I proceeded to verify my result from my partner; he said that everything
+How we ensured that the implemented code was a solution was that, at first, it was able to compile. We ran the kernel and saw that there were no visible errors. In addition, we saw our print statement that we implemented, indicating that the kernel was able to run the function. We didn't encounter any bugs which brought us to the conclusion that everything was working properly to this point.  I proceeded to verify my result from my partner; he said that everything
 seems to be running fine.
 
 
@@ -160,14 +134,7 @@ seems to be running fine.
 \begin{question}{4}
 What did you learn?
 \end{question}
-What we learned from this assignment was, obviously that the block has a very
-important role in the operating system. It provides a method of switching
-randomly accessible data to fixed-size blocks. In addition, I learned that
-working with a partner is extremely useful because when I was stuck on trying
-to find information about the simple block driver but my partner showed me a
-useful resource. Also, the ability to search for information was vital for this
-assignment. In addition, we learned that the kernel has many libraries that we
-as programmers still have to learn about.
+What we learned from this assignment is reading code is difficult, especially when it is written by someone else. We had a hard time with understanding the code. We search the Internet to find useful information and reread the memory management chapter. We learned the importance of writing documentation in the code because it can get confusing to a foreign user. In addition, the opportunity to discuss the problem with my partner enabled me to think of the problem in a different way. In conclusion, the memory management is a complicated system that needs to be appreciated. 
 
 
 
@@ -177,13 +144,9 @@ as programmers still have to learn about.
 
 \vspace{0.25in}
 \begin{question}{5}
-How should the TA evaluate your work? Provide detailed steps to prove correctness.
+How should the TA test your patch?
 \end{question}
-The TA should do the following instructions: run the kernel. After the kernel
-is on halt, open up another terminal. Further, type gdb. And enter target 5013
-then press enter. Enter continue them press enter. This will show you that the
-kernel was able to compile. Thus, the block driver was able to register withe
-the kernel, then, executed without a problem.
+The TA should analyze the patch file. The TA then should look for any attempt to change the first-fit algorithm to a best-fit algorithm. In this way, it would show that an effort was made to modify this complicated system. 
 
 
 
